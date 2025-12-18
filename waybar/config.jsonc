@@ -7,7 +7,7 @@
   "reload_style_on_change": true,
   "modules-left": ["hyprland/window"],
   "modules-center": ["hyprland/workspaces"],
-  "modules-right": ["hyprland/language", "pulseaudio", "clock", "custom/notification"],
+  "modules-right": ["hyprland/language", "pulseaudio", "network", "clock", "custom/notification"],
   "hyprland/window": {
     "format": "{initialTitle}",
     "separate-outputs": true,
@@ -49,15 +49,23 @@
     "on-click": "pavucontrol",
     "ignored-sinks": ["Easy Effects Sink"]
   },
+  "network": {
+    "interface": "wlan0",
+    "format": "{ifname}",
+    "format-wifi": "",
+    "format-disconnected": "󰖪", //An empty format will hide the module.
+    "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+    "on-click": "hyprctl dispatch exec \"[float] ghostty -e nmtui\""
+  },
   "clock": {
     "format": "{:%a, %b %d, %Y - %H:%M}  "
   },
   "custom/notification": {
     "tooltip": true,
-    "format": "<span size='16pt'>{icon}</span>",
+    "format": "<span>{icon}</span>",
     "format-icons": {
       "notification": "󱅫",
-      "none": "󰂜",
+      "none": "",
       "dnd-notification": "󰂠",
       "dnd-none": "󰪓",
       "inhibited-notification": "󰂛",

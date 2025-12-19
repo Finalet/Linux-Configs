@@ -10,5 +10,4 @@ class = "com.mitchellh.ghostty"
 size = "900px 600px"
 unfocus = "hide"
 hysteresis = 0
-lazy = true
 multi = false

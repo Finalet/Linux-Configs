@@ -12,7 +12,8 @@
     "format": "{icon}",
     "icon-size": 16,
     "tooltip-format": "{title}",
-    "all-outputs": true
+    "all-outputs": true,
+    "on-click": "activate"
   },
   "hyprland/window": {
     "format": "{initialTitle}",

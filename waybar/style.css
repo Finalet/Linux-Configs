@@ -50,7 +50,7 @@ window#waybar {
   min-width: 20px;
   min-height: 0px;
   border-radius: 15px;
-  opacity: 0.5;
+  opacity: 0.4;
   border: none;
   border-radius: 999px;
   transition: all 0.3s ease-out;
@@ -64,7 +64,7 @@ window#waybar {
 
 #workspaces button.active {
   min-width: 40px;
-  opacity: 1;
+  opacity: 0.8;
 }
 
 #workspaces button:hover {

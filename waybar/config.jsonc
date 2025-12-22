@@ -7,7 +7,7 @@
   "reload_style_on_change": true,
   "modules-left": ["wlr/taskbar", "hyprland/window"],
   "modules-center": ["hyprland/workspaces"],
-  "modules-right": ["hyprland/language", "pulseaudio", "network", "clock", "custom/notification"],
+  "modules-right": ["hyprland/language", "group/settings", "clock", "custom/notification"],
   "wlr/taskbar": {
     "format": "{icon}",
     "icon-size": 16,
@@ -36,21 +36,19 @@
     "format-ru": "RU",
     "on-click": "hyprctl switchxkblayout current next"
   },
+  "group/settings": {
+    "orientation": "inherit",
+    "modules": ["pulseaudio", "custom/divider", "network"]
+  },
+  "custom/divider": {
+    "format": " "
+  },
   "pulseaudio": {
-    "format": "{volume}% {icon}",
+    "format": "{icon}",
     "format-bluetooth": "{volume}% {icon}",
-    "format-muted": "",
+    "format-muted": "",
     "format-icons": {
-      "alsa_output.pci-0000_00_1f.3.analog-stereo": "",
-      "alsa_output.pci-0000_00_1f.3.analog-stereo-muted": "",
-      "headphone": "",
-      "hands-free": "",
-      "headset": "",
-      "phone": "",
-      "phone-muted": "",
-      "portable": "",
-      "car": "",
-      "default": ["", ""]
+      "default": ["", "", ""]
     },
     "scroll-step": 1,
     "on-click": "hyprctl dispatch exec \"[float; size 800x600] pavucontrol\""
@@ -59,7 +57,7 @@
     "interface": "wlan0",
     "format": "{ifname}",
     "format-wifi": "",
-    "format-disconnected": "󰖪", //An empty format will hide the module.
+    "format-disconnected": "󰖪",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "on-click": "hyprctl dispatch exec \"[float] ghostty -e nmtui\""
   },

@@ -24,6 +24,7 @@
   --group-collapse-tranistion: opacity 400ms ease-in-out;
   --hover-transition: var(--hover-tranistion);
   --group-collapse-transition: var(--group-collapse-tranistion);
+  font-family: "SF Pro Text";
 }
 
 /* Fallback for older CSS themes */
@@ -79,7 +80,7 @@ blankwindow {
 }
 
 .notification-row .notification-background {
-  padding: 6px 24px 34px 24px;
+  padding: 6px 24px 24px 24px;
   margin-right: -16px;
 }
 
@@ -92,7 +93,6 @@ blankwindow {
   background: rgba(var(--noti-bg), var(--noti-bg-alpha));
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.5);
 }
-
 .notification-row .notification-background .notification.low {
   /* Low Priority Notification */
 }
@@ -335,6 +335,7 @@ blankwindow {
 .control-center .control-center-list-placeholder {
   /* The placeholder when there are no notifications */
   opacity: 0.5;
+  background-image: none;
 }
 
 .control-center .control-center-list {
@@ -371,15 +372,17 @@ blankwindow {
 
 /*** Widgets ***/
 .widget {
-  margin: 8px;
+  margin: 0px 8px;
   padding: 8px;
   border-radius: var(--border-radius);
 }
 
 /* Title widget */
 .widget-title > label {
+  margin-top: 8px;
   margin-right: 8px;
   font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .widget-title > button {

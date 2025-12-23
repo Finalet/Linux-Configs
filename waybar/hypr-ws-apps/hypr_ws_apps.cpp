@@ -291,6 +291,9 @@ struct ModuleState {
   int max_icons = 0;
   bool show_empty = false;
   bool tooltip = true;
+  std::string css_class;
+  std::string active_workspace;         // from workspace>> (normal workspaces)
+  std::string active_special_workspace; // from activespecial>> (special workspaces)
 
   std::atomic<bool> stop{false};
   GThread* thread = nullptr;
@@ -335,6 +338,22 @@ static void render_icons(ModuleState* st) {
   gtk_style_context_remove_class(row_ctx, "empty");
   gtk_style_context_remove_class(row_ctx, "nonempty");
   gtk_style_context_add_class(row_ctx, is_empty ? "empty" : "nonempty");
+
+  const bool is_special_target = starts_with(st->workspace, "special:");
+  const bool is_active =
+    is_special_target
+      ? (!st->active_special_workspace.empty() && st->active_special_workspace == st->workspace)
+      : (!st->active_workspace.empty() && st->active_workspace == st->workspace);
+
+  auto apply_active_classes = [&](GtkWidget* w) {
+    GtkStyleContext* ctx = gtk_widget_get_style_context(w);
+    gtk_style_context_remove_class(ctx, "active");
+    gtk_style_context_remove_class(ctx, "inactive");
+    gtk_style_context_add_class(ctx, is_active ? "active" : "inactive");
+  };
+
+  apply_active_classes(st->wrapper);
+  apply_active_classes(st->box);
 
 
   if (classes == st->last_classes) return;
@@ -406,6 +425,20 @@ static void request_update(ModuleState* st) {
   }, st);
 }
 
+static std::string first_field(std::string s) {
+  s = trim(std::move(s));
+  auto pos = s.find(',');
+  if (pos != std::string::npos) s = s.substr(0, pos);
+  return trim(std::move(s));
+}
+
+static std::string normalize_special_name(std::string s) {
+  s = first_field(std::move(s));
+  if (s.empty()) return s;
+  if (starts_with(s, "special:")) return s;   // already fully-qualified
+  return "special:" + s;                      // add prefix
+}
+
 // thread: listen hypr events
 static gpointer hypr_thread_fn(gpointer data) {
   auto* st = (ModuleState*)data;
@@ -446,10 +479,23 @@ static gpointer hypr_thread_fn(gpointer data) {
       std::string line = buf.substr(pos, nl - pos);
       pos = nl + 1;
 
+      if (starts_with(line, "workspace>>")) {
+        st->active_workspace = first_field(line.substr(strlen("workspace>>")));
+        request_update(st);
+        continue;
+      }
+
+      if (starts_with(line, "activespecial>>")) {
+        st->active_special_workspace = normalize_special_name(
+          line.substr(strlen("activespecial>>"))
+        );
+        request_update(st);
+        continue;
+      }
+
       if (starts_with(line, "openwindow>>") ||
           starts_with(line, "closewindow>>") ||
           starts_with(line, "movewindow>>") ||
-          starts_with(line, "workspace>>") ||
           starts_with(line, "createworkspace>>") ||
           starts_with(line, "destroyworkspace>>")) {
         request_update(st);
@@ -499,6 +545,9 @@ extern "C" void* wbcffi_init(const wbcffi_init_info* init_info,
   if (auto v = config_get_json_string(config_entries, config_entries_len, "tooltip")) {
     if (auto b = parse_bool_loose(*v)) st->tooltip = *b;
   }
+  if (auto v = config_get_json_string(config_entries, config_entries_len, "css_class")) {
+    if (auto s = parse_string_loose(*v)) st->css_class = *s;
+  }
 
   // UI: wrapper (stylable) -> row (icons)
   st->wrapper = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -508,6 +557,9 @@ extern "C" void* wbcffi_init(const wbcffi_init_info* init_info,
   gtk_widget_set_name(st->wrapper, "hypr-ws-apps");
   GtkStyleContext* wctx = gtk_widget_get_style_context(st->wrapper);
   gtk_style_context_add_class(wctx, "hypr-ws-apps");
+  if (!st->css_class.empty()) {
+    gtk_style_context_add_class(wctx, st->css_class.c_str());
+  }
 
   // Row that actually holds icons
   st->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -515,12 +567,18 @@ extern "C" void* wbcffi_init(const wbcffi_init_info* init_info,
   gtk_widget_set_name(st->box, "hypr-ws-apps-row");
   GtkStyleContext* row_ctx = gtk_widget_get_style_context(st->box);
   gtk_style_context_add_class(row_ctx, "hypr-ws-apps-row");
+  if (!st->css_class.empty()) {
+    gtk_style_context_add_class(row_ctx, st->css_class.c_str());
+  }
 
   // NEW: inner container that holds icons
   st->icons = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_widget_set_name(st->icons, "hypr-ws-apps-icons");
   GtkStyleContext* icons_ctx = gtk_widget_get_style_context(st->icons);
   gtk_style_context_add_class(icons_ctx, "hypr-ws-apps-icons");
+  if (!st->css_class.empty()) {
+    gtk_style_context_add_class(icons_ctx, st->css_class.c_str());
+  }
 
   // Center icons container within the row
   gtk_widget_set_halign(st->icons, GTK_ALIGN_CENTER);

@@ -105,6 +105,10 @@ window#waybar {
   opacity: 0.5;
 }
 
+#hypr-ws-apps.scratchpad {
+  opacity: 1;
+}
+
 #hypr-ws-apps-row {
   transition: all 0.3s ease-out;
   background-color: rgba(255, 255, 255, 0.1);
@@ -114,6 +118,10 @@ window#waybar {
 
 #hypr-ws-apps-row.empty {
   min-width: 0px;
+}
+
+#hypr-ws-apps-row.active {
+  background-color: rgba(255, 255, 255, 0.75);
 }
 
 #hypr-ws-apps.empty {

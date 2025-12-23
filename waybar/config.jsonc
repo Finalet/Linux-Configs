@@ -5,7 +5,7 @@
   "height": 40,
   "spacing": 0,
   "modules-left": ["hyprland/window"],
-  "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps"],
+  "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps#scratchpad", "cffi/hypr-ws-apps#minimizedWindow"],
   "modules-right": ["hyprland/language", "group/settings", "clock", "custom/notification"],
   // "wlr/taskbar": {
   //   "format": "{icon}",
@@ -35,14 +35,25 @@
       "icon-size": 16
     }
   },
-  "cffi/hypr-ws-apps": {
+  "cffi/hypr-ws-apps#minimizedWindow": {
     "module_path": "/home/grant/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so",
     "workspace": "special:minimizedWindow",
     "icon_size": 16, // px
     "spacing": 8, // px between icons
     "max_icons": 12, // 0 = unlimited
     "show_empty": true, // hide widget when no apps
-    "tooltip": true // show tooltip listing apps
+    "tooltip": true, // show tooltip listing apps
+    "css_class": "minimizedWindow"
+  },
+  "cffi/hypr-ws-apps#scratchpad": {
+    "module_path": "/home/grant/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so",
+    "workspace": "special:scratchpad",
+    "icon_size": 16, // px
+    "spacing": 8, // px between icons
+    "max_icons": 12, // 0 = unlimited
+    "show_empty": true, // hide widget when no apps
+    "tooltip": true, // show tooltip listing apps
+    "css_class": "scratchpad"
   },
   "hyprland/language": {
     "format": "{} ",

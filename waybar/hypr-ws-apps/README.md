@@ -106,65 +106,141 @@ All config fields are read from the Waybar module config object.
 
 ## Styling (CSS)
 
-This module provides GTK widget IDs / classes for styling:
+This module exposes **GTK widget IDs** so you can style it from your Waybar `style.css`.
 
-### Containers
+### Widget structure (IDs)
 
-- Wrapper (outer, expands):
+The module creates this hierarchy:
 
-  - ID: `#hypr-ws-apps`
-  - Class: `.hypr-ws-apps`
-  - State classes applied here: `.empty` / `.nonempty`
+- **Wrapper** (outer container; usually what you size/pad/background)
+  - **ID:** `#hypr-ws-apps`
+- **Row** (inner container; useful for transitions/min-width)
+  - **ID:** `#hypr-ws-apps-row`
+- **Icons strip** (actual box that contains icon images)
+  - **ID:** `#hypr-ws-apps-icons`
 
-- Row container:
+> Note: The module uses fixed IDs for all instances. To style multiple instances differently, see “Multiple instances” below.
 
-  - ID: `#hypr-ws-apps-row`
-  - Class: `.hypr-ws-apps-row`
-  - State classes also applied here: `.empty` / `.nonempty`
+---
 
-- Icon strip (actual icon box inside the row):
-  - ID: `#hypr-ws-apps-icons`
-  - Class: `.hypr-ws-apps-icons`
+### State selectors
 
-### Per-icon
+The module toggles the following state selectors by appending them to the IDs:
 
-- Each icon gets class: `.hypr-ws-apps-icon`
+#### Empty state (no icons)
 
-### Example `~/.config/waybar/style.css`
+Applied when there are **no icons/windows** in the configured workspace:
 
-```css
-/* Outer wrapper: size/background */
-#hypr-ws-apps {
-  padding: 0 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-}
+- `#hypr-ws-apps.empty`
+- `#hypr-ws-apps-row.empty`
 
-/* Row container (optional styling) */
-#hypr-ws-apps-row {
-  padding: 2px 6px;
-  border-radius: 8px;
-}
+When there are icons, the module uses:
 
-/* Center strip styling */
-#hypr-ws-apps-icons {
-  /* e.g. add subtle background behind icons */
-  /* background: rgba(0,0,0,0.15); */
-  border-radius: 8px;
-}
+- `#hypr-ws-apps.nonempty`
+- `#hypr-ws-apps-row.nonempty`
 
-/* Per-icon styling */
-#hypr-ws-apps-icons {
-  padding: 2px;
-}
+#### Active state (workspace is focused)
 
-/* Empty state */
-#hypr-ws-apps.empty,
-#hypr-ws-apps-row.empty {
-  opacity: 0.35;
-  background: transparent;
+Applied when the configured workspace is the **currently active workspace**:
+
+- `#hypr-ws-apps.active`
+- `#hypr-ws-apps-row.active`
+
+When it is not active:
+
+- `#hypr-ws-apps.inactive`
+- `#hypr-ws-apps-row.inactive`
+
+---
+
+### Multiple instances (per-instance styling)
+
+When you configure multiple instances like:
+
+- `cffi/hypr-ws-apps#scratchpad`
+- `cffi/hypr-ws-apps#minimizedWindow`
+
+…Waybar’s instance suffix is **not automatically reflected in the module’s IDs**. To style each instance differently, set a `css_class` in the module config; the module will append it as a suffix selector to the same IDs.
+
+Example config:
+
+```jsonc
+"cffi/hypr-ws-apps#scratchpad": {
+  "module_path": "/home/<user>/.config/waybar/cffi/libhypr_ws_apps.so",
+  "workspace": "special:scratchpad",
+  "css_class": "scratchpad"
+},
+"cffi/hypr-ws-apps#minimizedWindow": {
+  "module_path": "/home/<user>/.config/waybar/cffi/libhypr_ws_apps.so",
+  "workspace": "special:minimizedWindow",
+  "css_class": "minimizedWindow"
 }
 ```
+
+Then you can style with:
+
+- `#hypr-ws-apps.scratchpad { ... }`
+- `#hypr-ws-apps-row.minimizedWindow { ... }`
+- `#hypr-ws-apps-icons.scratchpad { ... }`
+
+---
+
+### Example CSS
+
+```css
+#hypr-ws-apps {
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  margin: 6px 4px 4px 4px;
+  border-radius: 12px;
+  padding: 3px;
+  transition: all 0.3s ease-out;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#hypr-ws-apps-row {
+  transition: all 0.3s ease-out;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  min-width: 34px;
+}
+
+#hypr-ws-apps-row.empty {
+  min-width: 0px;
+}
+
+#hypr-ws-apps-row.active {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+#hypr-ws-apps.empty {
+  margin-left: -4px;
+  padding: 0px;
+  opacity: 0;
+}
+```
+
+---
+
+### Quick selector reference (complete)
+
+- Wrapper:
+
+  - `#hypr-ws-apps`
+  - `#hypr-ws-apps.empty` / `#hypr-ws-apps.nonempty`
+  - `#hypr-ws-apps.active` / `#hypr-ws-apps.inactive`
+  - `#hypr-ws-apps.<your-css_class>`
+
+- Row:
+
+  - `#hypr-ws-apps-row`
+  - `#hypr-ws-apps-row.empty` / `#hypr-ws-apps-row.nonempty`
+  - `#hypr-ws-apps-row.active` / `#hypr-ws-apps-row.inactive`
+  - `#hypr-ws-apps-row.<your-css_class>`
+
+- Icons strip:
+  - `#hypr-ws-apps-icons`
+  - `#hypr-ws-apps-icons.<your-css_class>`
 
 ---
 

@@ -62,7 +62,6 @@ Add to `~/.config/waybar/config.jsonc`:
 ```jsonc
 {
   "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps"],
-
   "cffi/hypr-ws-apps": {
     "module_path": "/home/<user>/.config/waybar/cffi/libhypr_ws_apps.so",
     "workspace": "1",

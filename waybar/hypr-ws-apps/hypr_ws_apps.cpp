@@ -321,6 +321,22 @@ static void render_icons(ModuleState* st) {
     if (st->max_icons > 0 && (int)classes.size() >= st->max_icons) break;
   }
 
+  const bool is_empty = classes.empty();
+
+  if (is_empty && !st->show_empty) gtk_widget_hide(st->wrapper);
+  else gtk_widget_show(st->wrapper);
+
+  GtkStyleContext* wrapper_ctx = gtk_widget_get_style_context(st->wrapper);
+  gtk_style_context_remove_class(wrapper_ctx, "empty");
+  gtk_style_context_remove_class(wrapper_ctx, "nonempty");
+  gtk_style_context_add_class(wrapper_ctx, is_empty ? "empty" : "nonempty");
+
+  GtkStyleContext* row_ctx = gtk_widget_get_style_context(st->box);
+  gtk_style_context_remove_class(row_ctx, "empty");
+  gtk_style_context_remove_class(row_ctx, "nonempty");
+  gtk_style_context_add_class(row_ctx, is_empty ? "empty" : "nonempty");
+
+
   if (classes == st->last_classes) return;
   st->last_classes = classes;
 
@@ -328,8 +344,6 @@ static void render_icons(ModuleState* st) {
   for (GList* l = children; l != nullptr; l = l->next) gtk_widget_destroy(GTK_WIDGET(l->data));
   g_list_free(children);
 
-  if (classes.empty() && !st->show_empty) gtk_widget_hide(st->wrapper);
-  else gtk_widget_show(st->wrapper);
 
   GtkIconTheme* theme = gtk_icon_theme_get_default();
 
@@ -374,16 +388,6 @@ static void render_icons(ModuleState* st) {
   } else {
     gtk_widget_set_has_tooltip(GTK_WIDGET(st->root), FALSE);
   }
-
-  GtkStyleContext* box_ctx = gtk_widget_get_style_context(st->wrapper);
-  gtk_style_context_remove_class(box_ctx, "empty");
-  gtk_style_context_remove_class(box_ctx, "nonempty");
-  gtk_style_context_add_class(box_ctx, classes.empty() ? "empty" : "nonempty");
-
-  GtkStyleContext* row_ctx = gtk_widget_get_style_context(st->box);
-  gtk_style_context_remove_class(row_ctx, "empty");
-  gtk_style_context_remove_class(row_ctx, "nonempty");
-  gtk_style_context_add_class(row_ctx, classes.empty() ? "empty" : "nonempty");
 }
 
 // invoked on GTK main loop

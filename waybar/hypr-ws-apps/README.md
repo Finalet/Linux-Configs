@@ -288,7 +288,3 @@ Then you can style with:
   ```
 
 ---
-
-## License
-
-Unspecified (use whatever license you prefer for your dotfiles/module).

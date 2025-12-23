@@ -4,9 +4,8 @@
   "position": "top",
   "height": 40,
   "spacing": 0,
-  "reload_style_on_change": true,
   "modules-left": ["hyprland/window"],
-  "modules-center": ["hyprland/workspaces"],
+  "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps"],
   "modules-right": ["hyprland/language", "group/settings", "clock", "custom/notification"],
   // "wlr/taskbar": {
   //   "format": "{icon}",
@@ -27,14 +26,23 @@
   "hyprland/workspaces": {
     "format": "{windows}",
     "persistent-workspaces": {
-      "HDMI-A-2": [1, 2, 3, 4, "special:minimizedWindow"],
-      "DP-4": [5, 6, 7, 8, "special:minimizedWindow"]
+      "HDMI-A-2": [1, 2, 3, 4],
+      "DP-4": [5, 6, 7, 8]
     },
     "workspace-taskbar": {
       "enable": true,
       "format": "{icon}",
       "icon-size": 16
     }
+  },
+  "cffi/hypr-ws-apps": {
+    "module_path": "/home/grant/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so",
+    "workspace": "special:minimizedWindow",
+    "icon_size": 16, // px
+    "spacing": 8, // px between icons
+    "max_icons": 12, // 0 = unlimited
+    "show_empty": true, // hide widget when no apps
+    "tooltip": true // show tooltip listing apps
   },
   "hyprland/language": {
     "format": "{} ",

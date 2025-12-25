@@ -84,7 +84,8 @@
     "format-wifi": "",
     "format-disconnected": "󰖪",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-    "on-click": "hyprctl dispatch exec \"[float] ghostty -e nmtui\""
+    "on-click": "vicinae vicinae://extensions/dagimg-dot/wifi-commander/scan-wifi",
+    "on-click-right": "hyprctl dispatch exec \"[float] ghostty -e nmtui\""
   },
   "clock": {
     "format": "{:%a, %b %d, %Y - %H:%M}  "

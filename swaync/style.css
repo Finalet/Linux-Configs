@@ -16,7 +16,7 @@
   --notification-group-icon-size: 24px;
   --border: 1px solid var(--noti-border-color);
   --border-radius: 12px;
-  --notification-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.7), 0 2px 6px 2px rgba(0, 0, 0, 0.3);
+  --notification-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 3px 1px rgba(0, 0, 0, 0.35), 0 2px 6px 2px rgba(0, 0, 0, 0.2);
   --font-size-body: 14px;
   --font-size-summary: 16px;
   /* Deprecated variables (because of their typos). Keeeping them around for backwards compatibility. */
@@ -167,12 +167,13 @@ blankwindow {
 
 .notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
   /* Notification time-ago */
-  font-size: var(--font-size-summary);
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: normal;
   background: transparent;
   color: var(--text-color);
+  opacity: 0.5;
   text-shadow: none;
-  margin-right: 30px;
+  margin-right: 8px;
 }
 
 .notification-row .notification-background .notification .notification-default-action .notification-content .text-box .body {
@@ -291,6 +292,8 @@ blankwindow {
 
 .notification-group .notification-group-headers .notification-group-header {
   color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 .notification-group .notification-group-buttons {

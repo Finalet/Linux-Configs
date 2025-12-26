@@ -405,9 +405,6 @@ static void render_icons(ModuleState* st) {
     auto icon = st->resolver.resolve_icon_for_class(cls);
     GtkWidget* img = nullptr;
 
-    std::string cmd = "notify-send 'hypr-ws-apps' 'icon for class \"" + cls + "\" is \"" + (icon ? *icon : "(none)") + "\"'";
-    system(cmd.c_str());
-
     if (icon && !icon->empty()) {
       if ((*icon)[0] == '/' || starts_with(*icon, "file://")) {
         std::string p = *icon;

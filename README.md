@@ -222,7 +222,7 @@ Create/copy a wallpaper there, then you can reload it and regenerate colors:
 ~/.config/hypr/scripts/reload-wallpaper.sh
 ```
 
-This script uses `hellwal` and `jq` to generate `~/.config/hypr/wallpaper/colors.css`.
+This script uses `hellwal` and `jq` to generate `~/.config/hypr/wallpapers/colors.css`.
 
 ### 3) Polkit agent
 

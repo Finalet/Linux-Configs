@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Change Wallpaper
+Exec=/home/grant/.config/hypr/scripts/wallpapers-dmenu.sh
+Icon=/home/grant/.local/share/icons/Fluent/scalable/apps/preferences-desktop-wallpaper.svg
+Terminal=false
+Categories=Utility;

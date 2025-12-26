@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Shutdown
+Exec=/home/grant/.config/hypr/scripts/shutdown.sh
+Icon=/home/grant/.local/share/icons/.Fluent-base/scalable/apps/system-shutdown.svg
+Terminal=false
+Categories=Utility;

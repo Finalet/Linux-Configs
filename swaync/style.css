@@ -88,7 +88,7 @@ blankwindow {
   /* The actual notification */
   border-radius: var(--border-radius);
   border: var(--border);
-  padding: 0;
+  padding: 8px;
   transition: var(--hover-tranistion);
   background: rgba(var(--noti-bg), var(--noti-bg-alpha));
   box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.5);
@@ -139,8 +139,6 @@ blankwindow {
   -gtk-icon-filter: none;
   -gtk-icon-size: var(--notification-icon-size);
   border-radius: 100px;
-  /* Size in px */
-  margin: 4px 8px 4px 4px;
 }
 
 .notification-row .notification-background .notification .notification-default-action .notification-content .app-icon {
@@ -163,6 +161,7 @@ blankwindow {
   background: transparent;
   color: var(--text-color);
   text-shadow: none;
+  margin-left: 6px;
 }
 
 .notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
@@ -183,6 +182,7 @@ blankwindow {
   background: transparent;
   color: var(--text-color);
   text-shadow: none;
+  margin-left: 6px;
 }
 
 .notification-row .notification-background .notification .notification-default-action .notification-content progressbar {

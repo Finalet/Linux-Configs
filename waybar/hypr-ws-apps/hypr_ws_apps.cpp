@@ -58,6 +58,18 @@ static std::string lower_ascii(std::string s) {
   return s;
 }
 
+// Normalize class name: lowercase, replace spaces with dashes
+static std::string normalize_class_name(const std::string& s) {
+  std::string out;
+  for (char c : s) {
+    if (c == ' ')
+      out += '-';
+    else
+      out += (char)g_ascii_tolower(c);
+  }
+  return out;
+}
+
 // ---------- icon resolver (unchanged logic, shortened here if you want) ----------
 struct DesktopEntry {
   std::string path, icon, startup_wmclass, name;
@@ -152,17 +164,38 @@ struct IconResolver {
 
     std::optional<std::string> found;
 
+    // Try direct match
     for (const auto& f : desktop_files) {
       if (lower_ascii(stem_of_desktop(f)) == key) {
         auto e = parse_desktop_file(f);
         if (!e.icon.empty()) { found = e.icon; break; }
       }
     }
+    // Try StartupWMClass match
     if (!found) {
       for (const auto& f : desktop_files) {
         auto e = parse_desktop_file(f);
         if (!e.startup_wmclass.empty() && lower_ascii(e.startup_wmclass) == key) {
           if (!e.icon.empty()) { found = e.icon; break; }
+        }
+      }
+    }
+
+    // Fallback: try normalized class name (lowercase, dashes)
+    if (!found) {
+      std::string norm = normalize_class_name(cls);
+      for (const auto& f : desktop_files) {
+        if (lower_ascii(stem_of_desktop(f)) == norm) {
+          auto e = parse_desktop_file(f);
+          if (!e.icon.empty()) { found = e.icon; break; }
+        }
+      }
+      if (!found) {
+        for (const auto& f : desktop_files) {
+          auto e = parse_desktop_file(f);
+          if (!e.startup_wmclass.empty() && lower_ascii(e.startup_wmclass) == norm) {
+            if (!e.icon.empty()) { found = e.icon; break; }
+          }
         }
       }
     }
@@ -372,6 +405,9 @@ static void render_icons(ModuleState* st) {
     auto icon = st->resolver.resolve_icon_for_class(cls);
     GtkWidget* img = nullptr;
 
+    std::string cmd = "notify-send 'hypr-ws-apps' 'icon for class \"" + cls + "\" is \"" + (icon ? *icon : "(none)") + "\"'";
+    system(cmd.c_str());
+
     if (icon && !icon->empty()) {
       if ((*icon)[0] == '/' || starts_with(*icon, "file://")) {
         std::string p = *icon;
@@ -385,7 +421,7 @@ static void render_icons(ModuleState* st) {
     }
 
     if (!img) {
-      img = gtk_image_new_from_icon_name("application-x-executable", GTK_ICON_SIZE_MENU);
+      img = gtk_image_new_from_icon_name("application-default-icon", GTK_ICON_SIZE_MENU);
       gtk_image_set_pixel_size(GTK_IMAGE(img), st->icon_size);
     }
 

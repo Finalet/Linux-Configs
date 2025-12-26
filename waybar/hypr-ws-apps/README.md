@@ -33,12 +33,12 @@ sudo pacman -S --needed gcc pkgconf gtk3 json-glib
 
 ## Build
 
-Place `hypr_ws_apps_icon.cpp` next to your `waybar_cffi_module.h` (get it from [Waybar repo](https://github.com/Alexays/Waybar/blob/master/resources/custom_modules/cffi_example/waybar_cffi_module.h), it must match your installed Waybar CFFI ABI).
+Place `hypr_ws_apps.cpp` next to your `waybar_cffi_module.h` (get it from [Waybar repo](https://github.com/Alexays/Waybar/blob/master/resources/custom_modules/cffi_example/waybar_cffi_module.h), it must match your installed Waybar CFFI ABI).
 
 Build the shared library:
 
 ```bash
-g++ -shared -fPIC -O2 -std=c++20 hypr_ws_apps_icon.cpp -o libhypr_ws_apps.so \
+g++ -shared -fPIC -O2 -std=c++20 hypr_ws_apps.cpp -o libhypr_ws_apps.so \
   $(pkg-config --cflags --libs gtk+-3.0 gio-2.0 glib-2.0 json-glib-1.0)
 ```
 

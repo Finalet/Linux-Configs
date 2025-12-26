@@ -4,16 +4,14 @@
   "position": "top",
   "height": 40,
   "spacing": 0,
-  "modules-left": ["hyprland/window"],
+  "modules-left": ["tray", "hyprland/window"],
   "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps#scratchpad", "cffi/hypr-ws-apps#minimizedWindow"],
   "modules-right": ["hyprland/language", "group/settings", "clock", "custom/notification"],
-  // "wlr/taskbar": {
-  //   "format": "{icon}",
-  //   "icon-size": 16,
-  //   "tooltip-format": "{title}",
-  //   "all-outputs": true,
-  //   "on-click": "activate"
-  // },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8,
+    "show-passive-items": true
+  },
   "hyprland/window": {
     "format": "{initialTitle}",
     "separate-outputs": true,

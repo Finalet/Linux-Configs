@@ -12,6 +12,7 @@ window#osd #container {
 
 window#osd image {
   -gtk-icon-transform: scale(0.5);
+  margin: 0px -4px;
 }
 
 window#osd image,

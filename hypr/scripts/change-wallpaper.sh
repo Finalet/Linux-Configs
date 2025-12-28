@@ -24,7 +24,7 @@ fi
 
 # Reload wallpaper in Hyprland
 hyprctl hyprpaper reload , $wallpaperPath
-notify-send "Wallpaper changed" "New wallpaper is \"$wallpaperPath\""
+notify-send "Wallpaper changed" "New wallpaper is \"$wallpaperPath\"" -i $wallpaperPath
 
 # Generate CSS color paller from the new wallpaper using Hellwal
 cssOutput="$HOME/.config/hypr/wallpapers/colors.css"

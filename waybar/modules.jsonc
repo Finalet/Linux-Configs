@@ -47,7 +47,8 @@
   },
   "mpris": {
     "format": "{status_icon}  {artist} - {title}",
-    "title-len": 20,
+    "artist-len": 20,
+    "title-len": 30,
     "status-icons": {
       "playing": "",
       "paused": ""

@@ -50,8 +50,8 @@
     "artist-len": 20,
     "title-len": 30,
     "status-icons": {
-      "playing": "",
-      "paused": ""
+      "playing": "",
+      "paused": ""
     }
   },
   "hyprland/language": {

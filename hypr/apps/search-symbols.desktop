@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Search Symbols
+Exec=/home/grant/.config/hypr/scripts/symbols-dmenu.sh
+Icon=/home/grant/.local/share/icons/Fluent/scalable/apps/gnome-search-tool.svg
+Terminal=false
+Categories=Utility;

@@ -70,7 +70,7 @@ window#waybar {
 
 /* Window */
 #waybar.empty #window {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 /* Custom Notification */

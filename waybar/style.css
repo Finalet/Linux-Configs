@@ -20,7 +20,8 @@ window#waybar {
 
 /* Defaults  */
 #language,
-#clock,
+#clock.calendar,
+#clock.time,
 #window,
 #custom-notification,
 #taskbar,

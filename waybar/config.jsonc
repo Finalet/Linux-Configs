@@ -4,14 +4,14 @@
     "output": "HDMI-A-1",
     "modules-left": ["tray", "hyprland/window"],
     "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps#scratchpad", "cffi/hypr-ws-apps#minimizedWindow"],
-    "modules-right": ["mpris", "hyprland/language", "group/settings", "clock", "custom/notification"],
+    "modules-right": ["mpris", "hyprland/language", "group/settings", "clock#calendar", "clock#time", "custom/notification"],
     "include": ["~/.config/waybar/default.jsonc", "~/.config/waybar/modules.jsonc"]
   },
   {
     "output": "DP-1",
     "modules-left": ["tray", "hyprland/window"],
     "modules-center": ["hyprland/workspaces", "cffi/hypr-ws-apps#scratchpad", "cffi/hypr-ws-apps#minimizedWindow"],
-    "modules-right": ["clock"],
+    "modules-right": ["clock#calendar", "clock#time"],
     "include": ["~/.config/waybar/default.jsonc", "~/.config/waybar/modules.jsonc"]
   }
 ]

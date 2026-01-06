@@ -55,7 +55,7 @@
     }
   },
   "hyprland/language": {
-    "format": "{} ",
+    "format": "{}  ",
     "format-en": "EN",
     "format-ru": "RU",
     "on-click": "hyprctl switchxkblayout current next"
@@ -84,10 +84,16 @@
     "format-disconnected": "󰖪",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "on-click": "vicinae vicinae://extensions/dagimg-dot/wifi-commander/scan-wifi",
-    "on-click-right": "hyprctl dispatch exec \"[float] ghostty -e nmtui\""
+    "on-click-right": "hyprctl dispatch exec [float] \"ghostty -e nmtui\""
   },
-  "clock": {
-    "format": "{:%a, %b %d, %Y - %H:%M}  "
+  "clock#calendar": {
+    "format": "{:%A, %B %d}  ",
+    "on-click": "hyprctl dispatch exec [float] gnome-calendar",
+    "tooltip": false
+  },
+  "clock#time": {
+    "format": "{:%H:%M}  ",
+    "tooltip": false
   },
   "custom/notification": {
     "tooltip": true,

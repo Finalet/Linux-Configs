@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Change Style
+Exec=/home/grant/.config/hypr/scripts/change-style.sh
+Icon=/home/grant/.local/share/icons/Fluent/scalable/apps/preferences-desktop-theme.svg
+Terminal=false
+Categories=Utility;

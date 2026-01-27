@@ -15,24 +15,42 @@ TARGET_CLASSES=("$@")
 # Hyprland socket path
 SOCKET_PATH="${XDG_RUNTIME_DIR}/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock"
 
-bind_super() {
-  hyprctl keyword unbind alt,mouse:272
-  hyprctl keyword unbind alt,mouse:273
+MOD_MASK_SUPER=64
+MOD_MASK_ALT=8
 
-  hyprctl keyword bindm super,mouse:272,movewindow
-  hyprctl keyword bindm super,mouse:273,resizewindow
+bind_super() {
+  hyprctl keyword unbind alt,mouse:272 >/dev/null
+  hyprctl keyword unbind alt,mouse:273 >/dev/null
+
+  hyprctl keyword bindm super,mouse:272,movewindow >/dev/null
+  hyprctl keyword bindm super,mouse:273,resizewindow >/dev/null
 }
 
 bind_alt() {
-  hyprctl keyword unbind super,mouse:272
-  hyprctl keyword unbind super,mouse:273
+  hyprctl keyword unbind super,mouse:272 >/dev/null
+  hyprctl keyword unbind super,mouse:273 >/dev/null
 
-  hyprctl keyword bindm alt,mouse:272,movewindow
-  hyprctl keyword bindm alt,mouse:273,resizewindow
+  hyprctl keyword bindm alt,mouse:272,movewindow >/dev/null
+  hyprctl keyword bindm alt,mouse:273,resizewindow >/dev/null
 }
 
-# Track current state to avoid redundant calls
-current_state=""
+get_keybind_modmask() {
+  local target_key="$1"
+
+  if [[ -z "$target_key" ]]; then
+    echo "Usage: get_keybind_modmask <key>" >&2
+    return 1
+  fi
+
+  local modmask
+  modmask=$(hyprctl binds -j | jq -r --arg key "$target_key" '.[] | select(.key == $key) | .modmask' | head -n 1)
+
+  if [[ -z "$modmask" || "$modmask" == "null" ]]; then
+    return 1
+  fi
+
+  echo "$modmask"
+}
 
 # Check if a class matches any target class
 is_target_class() {
@@ -47,19 +65,20 @@ is_target_class() {
 
 handle_window_change() {
   local window_class="$1"
+  local current_modmask=$(get_keybind_modmask "mouse:272")
   
   if is_target_class "$window_class"; then
-    if [[ "$current_state" != "target" ]]; then
-      echo "Target window active ($window_class) - binding super key"
+    if [[ "$current_modmask" != "$MOD_MASK_SUPER" ]]; then
+      echo "Target window active ($window_class) - binding SUPER key"
       bind_super
-      current_state="target"
     fi
+    echo "Target window active ($window_class) - SUPER key is already binded"
   else
-    if [[ "$current_state" != "other" ]]; then
-      echo "Target window inactive - binding alt key"
+    if [[ "$current_modmask" != "$MOD_MASK_ALT" ]]; then
+      echo "Target window inactive - binding ALT key"
       bind_alt
-      current_state="other"
     fi
+    echo "Target window inactive - ALT key is already binded"
   fi
 }
 

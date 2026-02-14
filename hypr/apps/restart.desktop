@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Restart
+Exec=/home/grant/.config/hypr/scripts/restart.sh
+Icon=/home/grant/.local/share/icons/.Fluent-base/scalable/apps/system-restart.svg
+Terminal=false
+Categories=Utility;

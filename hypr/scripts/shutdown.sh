@@ -7,5 +7,6 @@ if yad --question \
   --borders=20 \
   --window-type=dialog \
   --fixed; then
-    hyprshutdown --post-cmd 'shutdown -P now'
+  hyprhalt --text "Shutting down" --post-cmd 'shutdown -P now'
+    # hyprshutdown --post-cmd 'shutdown -P now'
 fi

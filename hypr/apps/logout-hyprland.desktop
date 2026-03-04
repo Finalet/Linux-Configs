@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Logout from Hyprland
-Exec=hyprshutdown --post-cmd 'hyprctl dispatch exit'
+Exec=/home/grant/.config/hypr/scripts/logout-hyprland.sh
 Icon=/home/grant/.local/share/icons/.Fluent-base/scalable/apps/gnome-logout.svg
 Terminal=false
 Categories=Utility;

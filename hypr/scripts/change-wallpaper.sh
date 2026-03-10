@@ -22,24 +22,6 @@ if [ ! -e "$wallpaperPath" ]; then
   exit 1
 fi
 
-# Reload wallpaper in Hyprland
-hyprctl hyprpaper reload , $wallpaperPath
-notify-send "Wallpaper changed" "New wallpaper is \"$wallpaperPath\"" -i $wallpaperPath
-
-# Generate CSS color paller from the new wallpaper using Hellwal
-cssOutput="$HOME/.config/hypr/wallpapers/colors.css"
-hellwal -i "$wallpaperPath" --json --no-cache | jq -r '
-  # Define special colors
-  "@define-color background " + .special.background + ";",
-  "@define-color foreground " + .special.foreground + ";",
-  "@define-color cursor "     + .special.cursor + ";",
-  "@define-color border "     + .special.border + ";",
-  # Define palette colors
-  (.colors | to_entries[] | "@define-color " + .key + " " + .value + ";")
-' > "$cssOutput"
-
-echo "Generated CSS color palette at \"$cssOutput\""
-
 # Update hyprpaper.conf with new wallpaper path using ~ for home
 hyprpaperConf="$HOME/.config/hypr/hyprpaper.conf"
 
@@ -51,6 +33,11 @@ case "$wallpaperPathForConf" in
     ;;
 esac
 
-echo "preload = $wallpaperPathForConf" > "$hyprpaperConf"
-echo "wallpaper = , $wallpaperPathForConf" >> "$hyprpaperConf"
-echo "Updated "$hyprpaperConf" with new wallpaper."
+# Replace only the path value in the existing hyprpaper config
+escapedWallpaperPathForConf=$(printf '%s\n' "$wallpaperPathForConf" | sed 's/[\\&]/\\&/g')
+sed -i "s|^\([[:space:]]*path[[:space:]]*=[[:space:]]*\).*|\1$escapedWallpaperPathForConf|" "$hyprpaperConf"
+echo "Updated path in $hyprpaperConf to new wallpaper."
+
+# Reload wallpaper in Hyprland
+hyprctl hyprpaper wallpaper ", $wallpaperPathForConf, cover"
+notify-send "Wallpaper changed" "New wallpaper is \"$wallpaperPath\"" -i $wallpaperPath

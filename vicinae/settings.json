@@ -29,6 +29,21 @@
                "alias": "g"
             }
          }
+      },
+      "browser-extension": {
+         "enabled": false
+      },
+      "clipboard": {
+         "entrypoints": {
+            "history": {
+               "preferences": {
+                  "defaultAction": "paste"
+               }
+            }
+         }
+      },
+      "power": {
+         "enabled": false
       }
    }
 }

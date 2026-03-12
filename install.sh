@@ -58,7 +58,7 @@ REQUIRED_AUR_PACKAGES=(
   otf-apple-sf-pro
   rose-pine-hyprcursor
   ttf-apple-emoji
-  vicinae
+  vicinae-bin
   visual-studio-code-bin
 )
 
@@ -232,6 +232,8 @@ InstallYAY () {
   }
   run makepkg -si --noconfirm
   popd >/dev/null || true
+
+  run yay -Sy
 }
 
 InstallPacmanPackages () {

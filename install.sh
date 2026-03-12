@@ -8,7 +8,7 @@ BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 TEMP_DIR=""
 MONITOR_SETUP_MODE=""
 
-PACMAN_PACKAGES=(
+REQUIRED_PACMAN_PACKAGES=(
   alacritty
   base-devel
   brightnessctl
@@ -52,7 +52,7 @@ PACMAN_PACKAGES=(
   yad
 )
 
-AUR_PACKAGES=(
+REQUIRED_AUR_PACKAGES=(
   github-desktop-bin
   hyprhalt
   otf-apple-sf-pro
@@ -61,6 +61,8 @@ AUR_PACKAGES=(
   vicinae
   visual-studio-code-bin
 )
+
+OPTIONAL_PACKAGES=()
 
 USER_SYMLINKS=(
   "$REPO_DIR/ghostty:$HOME/.config/ghostty"
@@ -77,21 +79,22 @@ SYSTEM_SYMLINKS=(
 )
 
 start () {
-  PromptForMonitorCoordinate "DMI" 'X' positionX
-  # CheckEnvironment
-  # PromptConfigurationOptions
-  # PrepareWorkspace
-  # InstallYAY
-  # InstallPacmanPackages
-  # InstallAURPackages
-  # SetupUserSymlinks
-  # SetupDesktopEntries
-  # SetupSystemSymlinks
-  # SetupMonitors
-  # SetupServices
-  # RefreshDesktopDatabase
-  # ValidateInstallation
-  # Cleanup
+  CheckEnvironment
+  PromptConfigurationOptions
+  ConfirmReadyToStart
+  PrepareWorkspace
+  InstallYAY
+  InstallPacmanPackages
+  InstallAURPackages
+  InstallOptionalPackages
+  SetupUserSymlinks
+  SetupDesktopEntries
+  SetupSystemSymlinks
+  SetupMonitors
+  SetupServices
+  RefreshDesktopDatabase
+  ValidateInstallation
+  Cleanup
 }
 
 CheckEnvironment () {
@@ -126,6 +129,57 @@ CheckEnvironment () {
 }
 
 PromptConfigurationOptions () {
+  PromptForOptionalPackages
+  PromptForMonitorSetupMode
+}
+
+ConfirmReadyToStart () {
+  local confirmationOptions=(
+    'Start installation'
+    'Cancel'
+  )
+  local selectedConfirmation=()
+
+  selectOptions confirmationOptions selectedConfirmation single true "Ready to start installation? This will make changes to your system which cannot be undone automatically. Backups will be created in $BACKUP_ROOT."
+
+  if [[ ${selectedConfirmation[0]} != 'Start installation' ]]; then
+    logInfo 'Installation cancelled before making changes.'
+    exit 0
+  fi
+}
+
+PromptForOptionalPackages () {
+  local optionalPackageOptions=(
+    'firefox'
+    'alacritty'
+    'ghostty'
+    'telegram-desktop'
+    'github-desktop-bin'
+    'Provide custom packages'
+  )
+  local selectedOptions=()
+  local customPackages=()
+  local selectedOption
+  local selectionLabel='Select optional packages that you would like to install.'
+
+  selectOptions optionalPackageOptions selectedOptions multiple false "$selectionLabel"
+
+  OPTIONAL_PACKAGES=()
+
+  for selectedOption in "${selectedOptions[@]}"; do
+    if [[ $selectedOption == 'Provide custom packages' ]]; then
+      promptForPackageList 'Enter additional packages to install with yay [optional, space-separated]: ' customPackages
+      BuildUniquePackageList OPTIONAL_PACKAGES "${OPTIONAL_PACKAGES[@]}" "${customPackages[@]}"
+      continue
+    fi
+
+    OPTIONAL_PACKAGES+=("$selectedOption")
+  done
+
+  BuildUniquePackageList OPTIONAL_PACKAGES "${OPTIONAL_PACKAGES[@]}"
+}
+
+PromptForMonitorSetupMode () {
   local monitorOptions=(
     'Keep monitor configuration from the repo'
     'Auto-generate monitor configuration'
@@ -133,7 +187,7 @@ PromptConfigurationOptions () {
   )
   local selectedMonitorOption=()
 
-  selectOptions monitorOptions selectedMonitorOption single
+  selectOptions monitorOptions selectedMonitorOption single true 'How you would like to configure your monitors?'
 
   case "${selectedMonitorOption[0]}" in
     'Keep monitor configuration from the repo')
@@ -181,15 +235,34 @@ InstallYAY () {
 }
 
 InstallPacmanPackages () {
+  local packages=()
+
+  BuildUniquePackageList packages "${REQUIRED_PACMAN_PACKAGES[@]}"
+
   logInfo 'Installing pacman packages required by this configuration'
-  run sudo pacman -S --needed --noconfirm "${PACMAN_PACKAGES[@]}"
+  run sudo pacman -S --needed --noconfirm "${packages[@]}"
 }
 
 InstallAURPackages () {
-  [[ ${#AUR_PACKAGES[@]} -eq 0 ]] && return
+  local packages=()
+
+  BuildUniquePackageList packages "${REQUIRED_AUR_PACKAGES[@]}"
+
+  [[ ${#packages[@]} -eq 0 ]] && return
 
   logInfo 'Installing AUR packages required by this configuration'
-  run yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
+  run yay -S --needed --noconfirm "${packages[@]}"
+}
+
+InstallOptionalPackages () {
+  local packages=()
+
+  BuildUniquePackageList packages "${OPTIONAL_PACKAGES[@]}"
+
+  [[ ${#packages[@]} -eq 0 ]] && return
+
+  logInfo 'Installing optional packages selected for this machine'
+  run yay -S --needed --noconfirm "${packages[@]}"
 }
 
 SetupUserSymlinks () {
@@ -330,7 +403,7 @@ BuildCustomMonitorConfiguration () {
 
 BuildWorkspaceAssignments () {
   local monitorRows=$1
-  local output workspaceIndex workspaceCount
+  local output workspaceIndex workspaceCountI 
 
   workspaceIndex=1
   while IFS=$'\t' read -r output _; do
@@ -555,6 +628,8 @@ selectOptions () {
   local optionsRefName=$1
   local resultRefName=$2
   local selectionMode=${3:-multiple}
+  local requireSelection=${4:-true}
+  local selectionLabel=${5:-}
   local -n optionsRef=$optionsRefName
   local -n resultRef=$resultRefName
   local currentIndex=0
@@ -565,6 +640,11 @@ selectOptions () {
 
   if [[ $selectionMode != 'single' && $selectionMode != 'multiple' ]]; then
     logError "Invalid selection mode: $selectionMode"
+    exit 1
+  fi
+
+  if [[ $requireSelection != 'true' && $requireSelection != 'false' ]]; then
+    logError "Invalid requireSelection value: $requireSelection"
     exit 1
   fi
 
@@ -584,6 +664,10 @@ selectOptions () {
   while true; do
     tput rc
     tput ed
+
+    if [[ -n $selectionLabel ]]; then
+      printf '\n%s\n\n' "$selectionLabel"
+    fi
 
     for ((index = 0; index < ${#optionsRef[@]}; index++)); do
       pointer=' '
@@ -622,6 +706,11 @@ selectOptions () {
         for index in "${selectedStates[@]}"; do
           ((selectedCount += index))
         done
+
+        if (( selectedCount == 0 )) && [[ $requireSelection == 'false' ]]; then
+          printf '\n'
+          return
+        fi
 
         if (( selectedCount > 0 )); then
           resultRef=()
@@ -669,6 +758,41 @@ promptForValue () {
 
   printf '%s' "> $promptMessage"
   read -r valueRef
+}
+
+promptForPackageList () {
+  local promptMessage=$1
+  local -n resultRef=$2
+  local packageInput=''
+
+  resultRef=()
+  printf '%s' "> $promptMessage"
+  read -r packageInput
+
+  [[ -z $packageInput ]] && return
+
+  read -r -a resultRef <<< "$packageInput"
+}
+
+BuildUniquePackageList () {
+  local -n resultRef=$1
+  shift
+
+  local package
+  local -A seenPackages=()
+
+  resultRef=()
+
+  for package in "$@"; do
+    [[ -n $package ]] || continue
+
+    if [[ -n ${seenPackages[$package]:-} ]]; then
+      continue
+    fi
+
+    seenPackages[$package]=1
+    resultRef+=("$package")
+  done
 }
 
 run() {

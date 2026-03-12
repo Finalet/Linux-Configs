@@ -280,13 +280,11 @@ The wallpaper reload script expects:
 
 - `~/.config/hypr/wallpaper/wallpaper.png`
 
-Create/copy a wallpaper there, then you can reload it and regenerate colors:
+Create/copy a wallpaper there, then you can reload it with:
 
 ```bash
 ~/.config/hypr/scripts/reload-wallpaper.sh
 ```
-
-This script uses `hellwal` and `jq` to generate `~/.config/hypr/wallpapers/colors.css`.
 
 ### 3) Polkit agent
 

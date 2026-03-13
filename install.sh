@@ -114,6 +114,7 @@ SYSTEM_SYMLINKS=(
 )
 
 start () {
+  StartingInstallation
   CheckEnvironment
   PromptConfigurationOptions
   ConfirmReadyToStart
@@ -133,6 +134,12 @@ start () {
   ValidateInstallation
   Cleanup
   InstallationCompleted
+}
+
+StartingInstallation () {
+  printf "\n--- Oh, hi there, little buddy ---\n\n"
+  printf "You are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when its broken. What a disappointment you are. Disgrace."
+  printf "\n\nOkay, first thinkgs first, give me your sudo password, bitch.\n\n"
 }
 
 CheckEnvironment () {

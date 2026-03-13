@@ -10,6 +10,7 @@ MONITOR_SETUP_MODE=""
 
 REQUIRED_PACMAN_PACKAGES=(
   # Dev utilities
+  alacritty
   git
   base-devel
   yad
@@ -81,7 +82,6 @@ REQUIRED_AUR_PACKAGES=(
 )
 
 OPTIONAL_PACKAGE_SUGGESTIONS=(
-  alacritty
   ghostty
   firefox
   chromium
@@ -98,6 +98,14 @@ OPTIONAL_PACKAGE_SUGGESTIONS=(
 
 OPTIONAL_PACKAGES=()
 
+HYPRPM_PLUGIN_SOURCES=(
+  https://github.com/hyprwm/hyprland-plugins
+)
+
+HYPRPM_ENABLED_PLUGINS=(
+  hyprexpo
+)
+
 USER_SYMLINKS=(
   "$REPO_DIR/ghostty:$HOME/.config/ghostty"
   "$REPO_DIR/hypr:$HOME/.config/hypr"
@@ -107,6 +115,7 @@ USER_SYMLINKS=(
   "$REPO_DIR/vicinae:$HOME/.config/vicinae"
   "$REPO_DIR/waybar:$HOME/.config/waybar"
   "$REPO_DIR/zsh/.zshrc:$HOME/.zshrc"
+  "$REPO_DIR/zsh/.p10k.zsh:$HOME/.p10k.zsh"
 )
 
 SYSTEM_SYMLINKS=(
@@ -129,6 +138,7 @@ start () {
   SetupDesktopEntries
   SetupSystemSymlinks
   SetupMonitors
+  SetupHyprlandPlugins
   ConfigureWaybar
   SetupServices
   RefreshDesktopDatabase
@@ -328,11 +338,13 @@ SetupZSH () {
 
   if [[ -d $themeDirectory ]]; then
     logInfo 'Powerlevel10k theme is already installed'
-    return
+  else
+    logInfo 'Installing Powerlevel10k theme for ZSH'
+    run git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$themeDirectory"
   fi
 
-  logInfo 'Installing Powerlevel10k theme for ZSH'
-  run git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$themeDirectory"
+  logInfo 'Setting zsh as the default shell'
+  run chsh -s /bin/zsh
 }
 
 SetupUserSymlinks () {
@@ -443,6 +455,28 @@ SetupMonitors () {
   printf '%s\n' "$monitorConfig" > "$REPO_DIR/hypr/configs/monitors.conf"
 
   logInfo 'Updated hypr/configs/monitors.conf'
+}
+
+SetupHyprlandPlugins () {
+  local pluginSource pluginName
+
+  commandExists hyprpm || {
+    logError 'hyprpm is required to install Hyprland plugins.'
+    exit 1
+  }
+
+  logInfo 'Updating Hyprland plugin registry'
+  run hyprpm update
+
+  for pluginSource in "${HYPRPM_PLUGIN_SOURCES[@]}"; do
+    logInfo "Adding Hyprland plugin source: $pluginSource"
+    run hyprpm add "$pluginSource"
+  done
+
+  for pluginName in "${HYPRPM_ENABLED_PLUGINS[@]}"; do
+    logInfo "Enabling Hyprland plugin: $pluginName"
+    run hyprpm enable "$pluginName"
+  done
 }
 
 ConfigureWaybar () {

@@ -51,6 +51,9 @@ REQUIRED_PACMAN_PACKAGES=(
   brightnessctl
   networkmanager
   xdg-desktop-portal-hyprland
+  # Hyprpm dependencies
+  cmake
+  cpio
   # Other utilities
   fzf
   keyd

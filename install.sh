@@ -14,6 +14,10 @@ REQUIRED_PACMAN_PACKAGES=(
   base-devel
   yad
   neovim
+  # Zsh
+  zsh
+  zsh-autosuggestions
+  zsh-syntax-highlighting
   # Fonts
   ttf-nerd-fonts-symbols
   ttf-roboto
@@ -102,6 +106,7 @@ USER_SYMLINKS=(
   "$REPO_DIR/swayosd:$HOME/.config/swayosd"
   "$REPO_DIR/vicinae:$HOME/.config/vicinae"
   "$REPO_DIR/waybar:$HOME/.config/waybar"
+  "$REPO_DIR/zsh/.zshrc:$HOME/.zshrc"
 )
 
 SYSTEM_SYMLINKS=(
@@ -110,24 +115,25 @@ SYSTEM_SYMLINKS=(
 
 start () {
   InstallationCompleted
-  # CheckEnvironment
-  # PromptConfigurationOptions
-  # ConfirmReadyToStart
-  # PrepareWorkspace
-  # InstallYAY
-  # InstallPacmanPackages
-  # InstallAURPackages
-  # InstallOptionalPackages
-  # SetupUserSymlinks
-  # SetupDesktopEntries
-  # SetupSystemSymlinks
-  # SetupMonitors
-  # ConfigureWaybar
-  # SetupServices
-  # RefreshDesktopDatabase
-  # ValidateInstallation
-  # Cleanup
-  # InstallationCompleted
+  CheckEnvironment
+  PromptConfigurationOptions
+  ConfirmReadyToStart
+  PrepareWorkspace
+  InstallYAY
+  InstallPacmanPackages
+  InstallAURPackages
+  InstallOptionalPackages
+  SetupZSH
+  SetupUserSymlinks
+  SetupDesktopEntries
+  SetupSystemSymlinks
+  SetupMonitors
+  ConfigureWaybar
+  SetupServices
+  RefreshDesktopDatabase
+  ValidateInstallation
+  Cleanup
+  InstallationCompleted
 }
 
 CheckEnvironment () {
@@ -299,6 +305,26 @@ InstallOptionalPackages () {
 
   logInfo 'Installing optional packages selected for this machine'
   run yay -S --needed --noconfirm "${packages[@]}"
+}
+
+SetupZSH () {
+  local ohMyZshDirectory="$HOME/.oh-my-zsh"
+  local themeDirectory="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+
+  if [[ ! -d $ohMyZshDirectory ]]; then
+    logInfo 'Installing Oh My Zsh'
+    run sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  else
+    logInfo 'Oh My Zsh is already installed'
+  fi
+
+  if [[ -d $themeDirectory ]]; then
+    logInfo 'Powerlevel10k theme is already installed'
+    return
+  fi
+
+  logInfo 'Installing Powerlevel10k theme for ZSH'
+  run git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$themeDirectory"
 }
 
 SetupUserSymlinks () {

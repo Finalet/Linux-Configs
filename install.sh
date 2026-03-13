@@ -114,7 +114,6 @@ SYSTEM_SYMLINKS=(
 )
 
 start () {
-  InstallationCompleted
   CheckEnvironment
   PromptConfigurationOptions
   ConfirmReadyToStart

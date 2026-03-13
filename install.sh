@@ -9,57 +9,87 @@ TEMP_DIR=""
 MONITOR_SETUP_MODE=""
 
 REQUIRED_PACMAN_PACKAGES=(
-  alacritty
-  base-devel
-  brightnessctl
-  dbus
-  firefox
-  ghostty
+  # Dev utilities
   git
-  glib2
+  base-devel
+  yad
+  neovim
+  # Fonts
+  ttf-nerd-fonts-symbols
+  ttf-roboto
+  otf-font-awesome
+  noto-fonts-cjk
+  # System apps
   gnome-calendar
-  gsettings-desktop-schemas
+  gnome-disk-utility
+  celluloid
+  resources
+  nautilus
+  # Desktop components
+  waybar
+  swaync
+  swayosd
+  # Hyprland utilities
   hypridle
   hyprland
   hyprlock
   hyprpaper
   hyprpicker
   hyprshot
-  jq
-  keyd
-  libnotify
-  networkmanager
-  otf-font-awesome
+  # Audio
   pavucontrol
   pipewire
   pipewire-pulse
   playerctl
+  # System services
   polkit-gnome
+  brightnessctl
+  networkmanager
+  xdg-desktop-portal-hyprland
+  # Other utilities
+  fzf
+  keyd
+  dbus
+  glib2
+  gsettings-desktop-schemas
+  jq
+  libnotify
   procps-ng
   qt6ct
-  resources
   socat
-  swaync
-  swayosd
-  telegram-desktop
-  ttf-nerd-fonts-symbols
-  ttf-roboto
-  waybar
   wireplumber
   wl-clipboard
   wtype
-  xdg-desktop-portal-hyprland
-  yad
 )
 
 REQUIRED_AUR_PACKAGES=(
-  github-desktop-bin
-  hyprhalt
-  otf-apple-sf-pro
+  # Cursor
   rose-pine-hyprcursor
+  # Fonts
+  otf-apple-sf-pro
   ttf-apple-emoji
+  # System apps
+  nautilus-dropbox
+  nautilus-admin-gtk4
+  # Other utilities
   vicinae-bin
+  hyprhalt
+)
+
+OPTIONAL_PACKAGE_SUGGESTIONS=(
+  alacritty
+  ghostty
+  firefox
+  chromium
+  telegram-desktop
   visual-studio-code-bin
+  github-desktop-bin
+  dropbox
+  libreoffice-still
+  fastfetch
+  obs-studio
+  teamspeak3
+  vesktop
 )
 
 OPTIONAL_PACKAGES=()
@@ -79,22 +109,25 @@ SYSTEM_SYMLINKS=(
 )
 
 start () {
-  CheckEnvironment
-  PromptConfigurationOptions
-  ConfirmReadyToStart
-  PrepareWorkspace
-  InstallYAY
-  InstallPacmanPackages
-  InstallAURPackages
-  InstallOptionalPackages
-  SetupUserSymlinks
-  SetupDesktopEntries
-  SetupSystemSymlinks
-  SetupMonitors
-  SetupServices
-  RefreshDesktopDatabase
-  ValidateInstallation
-  Cleanup
+  InstallationCompleted
+  # CheckEnvironment
+  # PromptConfigurationOptions
+  # ConfirmReadyToStart
+  # PrepareWorkspace
+  # InstallYAY
+  # InstallPacmanPackages
+  # InstallAURPackages
+  # InstallOptionalPackages
+  # SetupUserSymlinks
+  # SetupDesktopEntries
+  # SetupSystemSymlinks
+  # SetupMonitors
+  # ConfigureWaybar
+  # SetupServices
+  # RefreshDesktopDatabase
+  # ValidateInstallation
+  # Cleanup
+  # InstallationCompleted
 }
 
 CheckEnvironment () {
@@ -135,9 +168,10 @@ PromptConfigurationOptions () {
 
 ConfirmReadyToStart () {
   local confirmationOptions=(
-    'Start installation'
+    'Start'
     'Cancel'
   )
+  local countdown
   local selectedConfirmation=()
 
   selectOptions confirmationOptions selectedConfirmation single true "Ready to start installation? This will make changes to your system which cannot be undone automatically. Backups will be created in $BACKUP_ROOT."
@@ -146,17 +180,17 @@ ConfirmReadyToStart () {
     logInfo 'Installation cancelled before making changes.'
     exit 0
   fi
+
+    logInfo 'Starting installation in 5 seconds. Press Ctrl+C to abort.'
+    for ((countdown = 5; countdown > 0; countdown--)); do
+      printf 'Starting in %d...\r' "$countdown"
+      sleep 1
+    done
+    printf '%s\n' 'Starting now.'
 }
 
 PromptForOptionalPackages () {
-  local optionalPackageOptions=(
-    'firefox'
-    'alacritty'
-    'ghostty'
-    'telegram-desktop'
-    'github-desktop-bin'
-    'Provide custom packages'
-  )
+  local optionalPackageOptions=("${OPTIONAL_PACKAGE_SUGGESTIONS[@]}" 'Provide custom packages')
   local selectedOptions=()
   local customPackages=()
   local selectedOption
@@ -354,6 +388,50 @@ SetupMonitors () {
   logInfo 'Updated hypr/configs/monitors.conf'
 }
 
+ConfigureWaybar () {
+  local waybarConfigPath monitorsJson monitorNamesJson tempConfigFile
+
+  waybarConfigPath="$REPO_DIR/waybar/config.jsonc"
+  
+  logInfo 'Configuring Waybar outputs from active monitors'
+
+  monitorsJson=$(hyprctl monitors -j 2>/dev/null) || {
+    logError 'Failed to read monitor information from hyprctl monitors -j for Waybar configuration.'
+    exit 1
+  }
+
+  monitorNamesJson=$(printf '%s\n' "$monitorsJson" | jq -c '[.[] | select((.disabled // false) | not) | .name]') || {
+    logError 'Failed to parse active monitor names for Waybar configuration.'
+    exit 1
+  }
+
+  if [[ $monitorNamesJson == '[]' ]]; then
+    logError 'No active monitors were reported by hyprctl monitors -j for Waybar configuration.'
+    exit 1
+  fi
+
+  tempConfigFile=$(mktemp)
+
+  JsoncToJson "$waybarConfigPath" | jq --argjson monitors "$monitorNamesJson" '
+    (.[0] // error("waybar/config.jsonc must contain at least one array element")) as $primary
+    | ((.[1] // .[0])) as $secondary
+    | [($primary | .output = $monitors[0])] + [$monitors[1:][] | ($secondary | .output = .)]
+  ' > "$tempConfigFile" || {
+    rm -f "$tempConfigFile"
+    logError 'Failed to rebuild Waybar monitor configuration.'
+    exit 1
+  }
+
+  run mv "$tempConfigFile" "$waybarConfigPath"
+  logInfo 'Updated waybar/config.jsonc outputs for active monitors'
+}
+
+JsoncToJson () {
+  local jsoncFile=$1
+
+  sed -E '/^[[:space:]]*\/\//d; s/[[:space:]]*\/\/.*$//' "$jsoncFile" | perl -0pe 's/,(\s*[\]}])/$1/g'
+}
+
 BuildAutoMonitorConfiguration () {
   local monitorRows=$1
   local output width height refresh
@@ -507,6 +585,12 @@ ValidateInstallation () {
   fi
 
   logInfo 'Installer validation completed successfully'
+}
+
+InstallationCompleted () {
+  echo "--- 👼 Installation Completed 👼 ---"
+  echo "Backups are located in: $BACKUP_DIR"
+  echo "Please reboot your system to ensure all changes take effect."
 }
 
 Cleanup () {

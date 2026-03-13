@@ -37,6 +37,9 @@
             },
             "github-desktop": {
                "alias": "g"
+            },
+            "vesktop": {
+               "alias": "discord"
             }
          }
       },

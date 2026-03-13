@@ -137,9 +137,9 @@ start () {
 }
 
 StartingInstallation () {
-  printf "\n--- Oh, hi there, little buddy ---\n\n"
-  printf "You are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when its broken. What a disappointment you are. Disgrace."
-  printf "\n\nOkay, first thinkgs first, give me your sudo password, bitch.\n\n"
+  printf "\n\n--- 🤨 Oh, hi there, little buddy 🤨 ---\n"
+  printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when its broken. What a disappointment you are. Disgrace.\n"
+  printf "\nOkay, first things first, give me your sudo password, bitch 👊💢.\n\n"
 }
 
 CheckEnvironment () {
@@ -174,8 +174,8 @@ CheckEnvironment () {
 }
 
 PromptConfigurationOptions () {
-  PromptForOptionalPackages
   PromptForMonitorSetupMode
+  PromptForOptionalPackages
 }
 
 ConfirmReadyToStart () {
@@ -188,7 +188,7 @@ ConfirmReadyToStart () {
 
   selectOptions confirmationOptions selectedConfirmation single true "Ready to start installation? This will make changes to your system which cannot be undone automatically. Backups will be created in $BACKUP_ROOT."
 
-  if [[ ${selectedConfirmation[0]} != 'Start installation' ]]; then
+  if [[ ${selectedConfirmation[0]} != 'Start' ]]; then
     logInfo 'Installation cancelled before making changes.'
     exit 0
   fi
@@ -202,19 +202,19 @@ ConfirmReadyToStart () {
 }
 
 PromptForOptionalPackages () {
-  local optionalPackageOptions=("${OPTIONAL_PACKAGE_SUGGESTIONS[@]}" 'Provide custom packages')
+  local optionalPackageOptions=("${OPTIONAL_PACKAGE_SUGGESTIONS[@]}" 'Provide custom packages [enter manually]')
   local selectedOptions=()
   local customPackages=()
   local selectedOption
-  local selectionLabel='Select optional packages that you would like to install.'
+  local selectionLabel='Select optional packages that you would like to install, you lazy dweeb.'
 
   selectOptions optionalPackageOptions selectedOptions multiple false "$selectionLabel"
 
   OPTIONAL_PACKAGES=()
 
   for selectedOption in "${selectedOptions[@]}"; do
-    if [[ $selectedOption == 'Provide custom packages' ]]; then
-      promptForPackageList 'Enter additional packages to install with yay [optional, space-separated]: ' customPackages
+    if [[ $selectedOption == 'Provide custom packages [enter manually]' ]]; then
+      promptForPackageList 'Enter additional packages to install with yay [optional, space-separated, idiota]: ' customPackages
       BuildUniquePackageList OPTIONAL_PACKAGES "${OPTIONAL_PACKAGES[@]}" "${customPackages[@]}"
       continue
     fi
@@ -227,22 +227,22 @@ PromptForOptionalPackages () {
 
 PromptForMonitorSetupMode () {
   local monitorOptions=(
-    'Keep monitor configuration from the repo'
-    'Auto-generate monitor configuration'
-    'Provide custom configuration'
+    "Keep monitor configuration from the repo, I'm stupid and scared to change anything."
+    "Auto-generate monitor configuration, I'm lazy and want to die."
+    "Provide custom configuration, I like to eat my own shit."
   )
   local selectedMonitorOption=()
 
-  selectOptions monitorOptions selectedMonitorOption single true 'How you would like to configure your monitors?'
+  selectOptions monitorOptions selectedMonitorOption single true 'How you would like mommy to configure your monitors, big boy?'
 
   case "${selectedMonitorOption[0]}" in
-    'Keep monitor configuration from the repo')
+    "Keep monitor configuration from the repo, I'm stupid and scared to change anything.")
       MONITOR_SETUP_MODE='keep'
       ;;
-    'Auto-generate monitor configuration')
+    "Auto-generate monitor configuration, I'm lazy and want to die.")
       MONITOR_SETUP_MODE='auto'
       ;;
-    'Provide custom configuration')
+    "Provide custom configuration, I like to eat my own shit.")
       MONITOR_SETUP_MODE='custom'
       ;;
     *)
@@ -620,9 +620,11 @@ ValidateInstallation () {
 }
 
 InstallationCompleted () {
-  echo "--- 👼 Installation Completed 👼 ---"
-  echo "Backups are located in: $BACKUP_DIR"
-  echo "Please reboot your system to ensure all changes take effect."
+  printf "\n\n--- 👼 Installation completed 👼 ---\n"
+  printf "\nGo ahead, enjoy the fruits of my labor, you little stupid fucking bitch. Don't forget that you are nobody, you are worthless, you are incapable of an original thought. Amoeba. Your dad would not be proud.\n"
+  printf "\nBackups are located in '$BACKUP_DIR', but not like you had anything worthy saving anyway.\n"
+  printf "\nReboot your system to ensure all changes take effect and fuck off.\n"
+  printf "\n🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕\n"
 }
 
 Cleanup () {

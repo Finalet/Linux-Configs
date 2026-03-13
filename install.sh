@@ -124,6 +124,7 @@ start () {
   InstallAURPackages
   InstallOptionalPackages
   SetupZSH
+  SetupGPU
   SetupUserSymlinks
   SetupDesktopEntries
   SetupSystemSymlinks
@@ -134,11 +135,12 @@ start () {
   ValidateInstallation
   Cleanup
   InstallationCompleted
+  PromptForHyprlandRestart
 }
 
 StartingInstallation () {
   printf "\n\n--- 🤨 Oh, hi there, little buddy 🤨 ---\n"
-  printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when its broken. What a disappointment you are. Disgrace.\n"
+  printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when it breaks. What a disappointment you are. Disgrace.\n"
   printf "\nOkay, first things first, give me your sudo password, bitch 👊💢.\n\n"
 }
 
@@ -299,7 +301,7 @@ InstallAURPackages () {
   [[ ${#packages[@]} -eq 0 ]] && return
 
   logInfo 'Installing AUR packages required by this configuration'
-  run yay -S --needed --noconfirm "${packages[@]}"
+  run yay -S --needed --noconfirm "${packages[@]}" --mflags --skipchecksums
 }
 
 InstallOptionalPackages () {
@@ -345,6 +347,29 @@ SetupUserSymlinks () {
     EnsureParentDirectory "$target"
     run ln -sfnT "$source" "$target"
   done
+}
+
+SetupGPU () {
+  local envConfigPath aqDrmDevicesPattern tempFile
+
+  envConfigPath="$REPO_DIR/hypr/configs/env.conf"
+  aqDrmDevicesPattern='^[[:space:]]*env[[:space:]]*=[[:space:]]*AQ_DRM_DEVICES,'
+
+  if [[ ! -f $envConfigPath ]]; then
+    logError "GPU setup failed: expected env config at $envConfigPath"
+    exit 1
+  fi
+
+  if ! grep -Eq "$aqDrmDevicesPattern" "$envConfigPath"; then
+    logInfo 'No AQ_DRM_DEVICES override found in env.conf'
+    return
+  fi
+
+  logInfo 'Removing AQ_DRM_DEVICES override from env.conf because its system specific.'
+  tempFile=$(mktemp)
+
+  awk '!match($0, /^[[:space:]]*env[[:space:]]*=[[:space:]]*AQ_DRM_DEVICES,/) { print }' "$envConfigPath" > "$tempFile"
+  run mv "$tempFile" "$envConfigPath"
 }
 
 SetupDesktopEntries () {
@@ -623,8 +648,26 @@ InstallationCompleted () {
   printf "\n\n--- 👼 Installation completed 👼 ---\n"
   printf "\nGo ahead, enjoy the fruits of my labor, you little stupid fucking bitch. Don't forget that you are nobody, you are worthless, you are incapable of an original thought. Amoeba. Your dad would not be proud.\n"
   printf "\nBackups are located in '$BACKUP_DIR', but not like you had anything worthy saving anyway.\n"
-  printf "\nReboot your system to ensure all changes take effect and fuck off.\n"
+  printf "\nRestart your hyprland session to ensure all changes take effect and fuck off.\n"
   printf "\n🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕\n"
+}
+
+PromptForHyprlandRestart () {
+  local restartOptions=(
+    "Waaaah, do everything for me, daddy, restart now, please!"
+    "Restart later, I like to play in mud."
+  )
+  local selectedRestartOption=()
+
+  selectOptions restartOptions selectedRestartOption single true 'Restart Hyprland session now?'
+
+  if [[ ${selectedRestartOption[0]} == 'Waaaah, do everything for me, daddy, restart now, please!' ]]; then
+    logInfo 'Restarting Hyprland session now'
+    run hyprctl dispatch exit
+    return
+  fi
+
+  logInfo 'Skipped Hyprland restart. Restart later to apply all changes.'
 }
 
 Cleanup () {

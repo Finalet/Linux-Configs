@@ -7,6 +7,7 @@ TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 TEMP_DIR=""
 MONITOR_SETUP_MODE=""
+SUDO_KEEPALIVE_PID=""
 
 REQUIRED_PACMAN_PACKAGES=(
   # Dev utilities
@@ -186,6 +187,27 @@ CheckEnvironment () {
   fi
 
   run sudo -v
+  StartSudoKeepAlive
+}
+
+StartSudoKeepAlive () {
+  [[ -n ${SUDO_KEEPALIVE_PID:-} ]] && return
+
+  # Keep sudo authentication fresh for the duration of the installer.
+  while true; do
+    sudo -n true >/dev/null 2>&1 || break
+    sleep 60
+  done &
+
+  SUDO_KEEPALIVE_PID=$!
+}
+
+StopSudoKeepAlive () {
+  [[ -n ${SUDO_KEEPALIVE_PID:-} ]] || return
+
+  kill "$SUDO_KEEPALIVE_PID" >/dev/null 2>&1 || true
+  wait "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+  SUDO_KEEPALIVE_PID=""
 }
 
 PromptConfigurationOptions () {
@@ -708,6 +730,8 @@ PromptForHyprlandRestart () {
 }
 
 Cleanup () {
+  StopSudoKeepAlive
+
   [[ -n $TEMP_DIR && -d $TEMP_DIR ]] || return
 
   logInfo 'Cleaning up temporary files'
@@ -1011,5 +1035,7 @@ logInfo() {
 logError() {
   printf '\033[31m%s\033[0m\n' "[ERROR]: $*"
 }
+
+trap Cleanup EXIT
 
 start

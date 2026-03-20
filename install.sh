@@ -191,12 +191,14 @@ CheckEnvironment () {
 }
 
 StartSudoKeepAlive () {
+  local parentPid=$$
+
   [[ -n ${SUDO_KEEPALIVE_PID:-} ]] && return
 
   # Keep sudo authentication fresh for the duration of the installer.
-  while true; do
-    sudo -n true >/dev/null 2>&1 || break
-    sleep 60
+  while kill -0 "$parentPid" >/dev/null 2>&1; do
+    sudo -n -v >/dev/null 2>&1 || break
+    sleep 30
   done &
 
   SUDO_KEEPALIVE_PID=$!
@@ -369,7 +371,7 @@ SetupZSH () {
   fi
 
   logInfo 'Setting zsh as the default shell'
-  run chsh -s /bin/zsh
+  run sudo chsh -s $(which zsh)
 }
 
 SetupUserSymlinks () {
@@ -495,12 +497,12 @@ SetupHyprlandPlugins () {
 
   for pluginSource in "${HYPRPM_PLUGIN_SOURCES[@]}"; do
     logInfo "Adding Hyprland plugin source: $pluginSource"
-    run hyprpm add "$pluginSource"
+    run hyprpm add "$pluginSource" -f
   done
 
   for pluginName in "${HYPRPM_ENABLED_PLUGINS[@]}"; do
     logInfo "Enabling Hyprland plugin: $pluginName"
-    run hyprpm enable "$pluginName"
+    run hyprpm enable "$pluginName" -f
   done
 }
 

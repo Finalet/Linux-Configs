@@ -166,10 +166,10 @@ CheckEnvironment () {
     exit 1
   fi
 
-  # if [[ $EUID -eq 0 ]]; then
-  #   logError 'Run this script as your normal user, not as root.'
-  #   exit 1
-  # fi
+  if [[ $EUID -eq 0 ]]; then
+    logError 'Run this script as your normal user, not as root.'
+    exit 1
+  fi
 
   commandExists sudo || {
     logError 'sudo is required to install packages and create system symlinks.'

@@ -166,10 +166,10 @@ CheckEnvironment () {
     exit 1
   fi
 
-  if [[ $EUID -eq 0 ]]; then
-    logError 'Run this script as your normal user, not as root.'
-    exit 1
-  fi
+  # if [[ $EUID -eq 0 ]]; then
+  #   logError 'Run this script as your normal user, not as root.'
+  #   exit 1
+  # fi
 
   commandExists sudo || {
     logError 'sudo is required to install packages and create system symlinks.'
@@ -493,7 +493,7 @@ SetupHyprlandPlugins () {
   }
 
   logInfo 'Updating Hyprland plugin registry'
-  run hyprpm update
+  run hyprpm update -f
 
   for pluginSource in "${HYPRPM_PLUGIN_SOURCES[@]}"; do
     logInfo "Adding Hyprland plugin source: $pluginSource"
@@ -724,7 +724,7 @@ PromptForHyprlandRestart () {
 
   if [[ ${selectedRestartOption[0]} == 'Waaaah, do everything for me, daddy, restart now, please!' ]]; then
     logInfo 'Restarting Hyprland session now'
-    run hyprctl dispatch exit
+    run reboot
     return
   fi
 

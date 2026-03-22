@@ -28,6 +28,7 @@ REQUIRED_PACMAN_PACKAGES=(
   gnome-calendar
   gnome-disk-utility
   celluloid
+  loupe
   resources
   nautilus
   lxappearance
@@ -149,6 +150,7 @@ start () {
   SetupMonitors
   SetupHyprlandPlugins
   SetupFluentGTKTheme
+  SetupFluentIconTheme
   ConfigureWaybar
   SetupServices
   RefreshDesktopDatabase
@@ -389,6 +391,23 @@ SetupFluentGTKTheme () {
   }
 
   run ./install.sh -t grey -n Fluent-dark -c dark -l -s standard -i default --tweaks round square
+
+  popd >/dev/null || true
+}
+
+SetupFluentIconTheme () {
+  local iconRepositoryDirectory="$TEMP_DIR/Fluent-icon-theme"
+
+  logInfo 'Installing Fluent icon theme'
+
+  run git clone --depth=1 https://github.com/vinceliuice/Fluent-icon-theme.git "$iconRepositoryDirectory"
+
+  pushd "$iconRepositoryDirectory" >/dev/null || {
+    logError 'Failed to enter Fluent icon theme directory.'
+    exit 1
+  }
+
+  run ./install.sh
 
   popd >/dev/null || true
 }

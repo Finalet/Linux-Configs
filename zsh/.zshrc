@@ -79,6 +79,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
+# Increasing saved history to 50,000 commands
+SAVEHIST=50000
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration

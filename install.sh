@@ -331,6 +331,8 @@ InstallOptionalPackages () {
 SetupZSH () {
   local ohMyZshDirectory="$HOME/.oh-my-zsh"
   local themeDirectory="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+  local autosuggestionsDirectory="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+  local syntaxHighlightingDirectory="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
 
   if [[ ! -d $ohMyZshDirectory ]]; then
     logInfo 'Installing Oh My Zsh'
@@ -344,6 +346,20 @@ SetupZSH () {
   else
     logInfo 'Installing Powerlevel10k theme for ZSH'
     run git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$themeDirectory"
+  fi
+
+  if [[ -d $autosuggestionsDirectory ]]; then
+    logInfo 'zsh-autosuggestions plugin is already installed'
+  else
+    logInfo 'Installing zsh-autosuggestions plugin for ZSH'
+    run git clone https://github.com/zsh-users/zsh-autosuggestions "$autosuggestionsDirectory"
+  fi
+
+  if [[ -d $syntaxHighlightingDirectory ]]; then
+    logInfo 'zsh-syntax-highlighting plugin is already installed'
+  else
+    logInfo 'Installing zsh-syntax-highlighting plugin for ZSH'
+    run git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$syntaxHighlightingDirectory"
   fi
 
   logInfo 'Setting zsh as the default shell'

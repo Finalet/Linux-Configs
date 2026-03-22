@@ -25,13 +25,15 @@ REQUIRED_PACMAN_PACKAGES=(
   otf-font-awesome
   noto-fonts-cjk
   # System apps
+  firefox
+  visual-studio-code-bin
   gnome-calendar
   gnome-disk-utility
   celluloid
   loupe
   resources
   nautilus
-  lxappearance
+  nwg-look
   # Desktop components
   waybar
   swaync
@@ -92,10 +94,8 @@ REQUIRED_AUR_PACKAGES=(
 
 OPTIONAL_PACKAGE_SUGGESTIONS=(
   ghostty
-  firefox
   chromium
   telegram-desktop
-  visual-studio-code-bin
   github-desktop-bin
   dropbox
   libreoffice-still

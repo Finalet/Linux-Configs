@@ -53,6 +53,10 @@ REQUIRED_PACMAN_PACKAGES=(
   # Hyprpm dependencies
   cmake
   cpio
+  # Fluent theme dependencies
+  gnome-themes-extra
+  gtk-engine-murrine
+  sassc
   # Other utilities
   fzf
   keyd
@@ -142,6 +146,7 @@ start () {
   SetupSystemSymlinks
   SetupMonitors
   SetupHyprlandPlugins
+  SetupFluentGTKTheme
   ConfigureWaybar
   SetupServices
   RefreshDesktopDatabase
@@ -364,6 +369,65 @@ SetupZSH () {
 
   logInfo 'Setting zsh as the default shell'
   run chsh -s $(which zsh)
+}
+
+SetupFluentGTKTheme () {
+  local themeRepositoryDirectory="$TEMP_DIR/Fluent-gtk-theme"
+  local themeColorsFilePath="$themeRepositoryDirectory/src/_sass/_colors.scss"
+
+  logInfo 'Installing customized Fluent GTK theme'
+
+  run git clone --depth=1 https://github.com/vinceliuice/Fluent-gtk-theme.git "$themeRepositoryDirectory"
+
+  CustomizeFluentGTKThemeColors "$themeColorsFilePath"
+
+  pushd "$themeRepositoryDirectory" >/dev/null || {
+    logError 'Failed to enter Fluent GTK theme directory.'
+    exit 1
+  }
+
+  run ./install.sh -t grey -n Fluent-dark -c dark -l -s standard -i default --tweaks round square
+
+  popd >/dev/null || true
+}
+
+CustomizeFluentGTKThemeColors () {
+  local colorsFilePath=$1
+  local tempFile
+
+  if [[ ! -f $colorsFilePath ]]; then
+    logError "Fluent GTK theme color customization failed: expected colors file at $colorsFilePath"
+    exit 1
+  fi
+
+  logInfo 'Customizing Fluent GTK theme dark colors'
+  tempFile=$(mktemp)
+
+  awk '
+    /^\$background:[[:space:]]+if\(\$variant == '\''light'\'', #F2F2F2, #333333\);$/ {
+      print "$background:                            if($variant == '\''light'\'', #F2F2F2, #161616);"
+      next
+    }
+
+    /^\$surface:[[:space:]]+if\(\$variant == '\''light'\'', #FFFFFF, #3C3C3C\);$/ {
+      print "$surface:                               if($variant == '\''light'\'', #FFFFFF, #1e1e1e);"
+      next
+    }
+
+    /^\$base:[[:space:]]+if\(\$variant == '\''light'\'', #FFFFFF, #2B2B2B\); \/\/ semi-surface with 1dp elevation$/ {
+      print "$base:                                  if($variant == '\''light'\'', #FFFFFF, #0f0f0f); // semi-surface with 1dp elevation"
+      next
+    }
+
+    /^\$base-alt:[[:space:]]+if\(\$variant == '\''light'\'', #FAFAFA, #303030\);$/ {
+      print "$base-alt:                              if($variant == '\''light'\'', #FAFAFA, #141414);"
+      next
+    }
+
+    { print }
+  ' "$colorsFilePath" > "$tempFile"
+
+  run mv "$tempFile" "$colorsFilePath"
 }
 
 SetupUserSymlinks () {

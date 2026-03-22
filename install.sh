@@ -43,7 +43,6 @@ REQUIRED_PACMAN_PACKAGES=(
   hyprshot
   # Audio
   pavucontrol
-  pipewire
   pipewire-pulse
   playerctl
   # System services
@@ -470,16 +469,16 @@ SetupHyprlandPlugins () {
   }
 
   logInfo 'Updating Hyprland plugin registry'
-  run hyprpm update -f
+  run hyprpm update
 
   for pluginSource in "${HYPRPM_PLUGIN_SOURCES[@]}"; do
     logInfo "Adding Hyprland plugin source: $pluginSource"
-    run hyprpm add "$pluginSource" -f
+    run hyprpm add "$pluginSource"
   done
 
   for pluginName in "${HYPRPM_ENABLED_PLUGINS[@]}"; do
     logInfo "Enabling Hyprland plugin: $pluginName"
-    run hyprpm enable "$pluginName" -f
+    run hyprpm enable "$pluginName"
   done
 }
 

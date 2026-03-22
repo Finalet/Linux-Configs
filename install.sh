@@ -30,6 +30,7 @@ REQUIRED_PACMAN_PACKAGES=(
   celluloid
   resources
   nautilus
+  lxappearance
   # Desktop components
   waybar
   swaync
@@ -55,7 +56,6 @@ REQUIRED_PACMAN_PACKAGES=(
   cpio
   # Fluent theme dependencies
   gnome-themes-extra
-  gtk-engine-murrine
   sassc
   # Other utilities
   fzf
@@ -82,6 +82,8 @@ REQUIRED_AUR_PACKAGES=(
   # System apps
   nautilus-dropbox
   nautilus-admin-gtk4
+  # Fluent theme dependencies
+  gtk-engine-murrine
   # Other utilities
   vicinae-bin
   hyprhalt

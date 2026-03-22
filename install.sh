@@ -111,6 +111,7 @@ HYPRPM_ENABLED_PLUGINS=(
 
 USER_SYMLINKS=(
   "$REPO_DIR/ghostty:$HOME/.config/ghostty"
+  "$REPO_DIR/alacritty/alacritty.toml:$HOME/.config/alacritty/alacritty.toml"
   "$REPO_DIR/hypr:$HOME/.config/hypr"
   "$REPO_DIR/hyprhalt:$HOME/.config/hyprhalt"
   "$REPO_DIR/swaync:$HOME/.config/swaync"

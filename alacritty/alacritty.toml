@@ -1,0 +1,10 @@
+general.import = ["~/.config/alacritty/themes/themes/xterm.toml"]
+
+[window]
+opacity = 0.9
+
+[selection]
+save_to_clipboard = true
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }

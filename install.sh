@@ -15,6 +15,8 @@ REQUIRED_PACMAN_PACKAGES=(
   base-devel
   yad
   neovim
+  jq
+  fzf
   # Zsh
   zsh
   zsh-autosuggestions
@@ -61,9 +63,7 @@ REQUIRED_PACMAN_PACKAGES=(
   gnome-themes-extra
   sassc
   # Other utilities
-  fzf
   keyd
-  jq
   qt6ct
   wireplumber
   wtype

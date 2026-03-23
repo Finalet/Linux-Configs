@@ -28,7 +28,6 @@ REQUIRED_PACMAN_PACKAGES=(
   noto-fonts-cjk
   # System apps
   firefox
-  visual-studio-code-bin
   gnome-calendar
   gnome-disk-utility
   celluloid
@@ -70,6 +69,8 @@ REQUIRED_PACMAN_PACKAGES=(
 )
 
 REQUIRED_AUR_PACKAGES=(
+  # VS Code
+  visual-studio-code-bin
   # Cursor
   rose-pine-hyprcursor
   # Fonts

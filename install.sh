@@ -156,6 +156,7 @@ start () {
   ValidateInstallation
   Cleanup
   InstallationCompleted
+  PromptForManualVicinaeExtensions
   PromptForHyprlandRestart
 }
 
@@ -783,8 +784,17 @@ InstallationCompleted () {
   printf "\n\n--- Installation completed ---\n"
   printf "\nGo ahead, enjoy the fruits of my labor, you little stupid fucking bitch. Don't forget that you are nobody, you are worthless, you are incapable of an original thought. Amoeba. Your dad would not be proud.\n"
   printf "\nBackups are located in '$BACKUP_DIR', but not like you had anything worthy saving anyway.\n"
-  printf "\nRestart your hyprland session to ensure all changes take effect and fuck off.\n"
+  printf "\nRestart your computer to ensure all changes take effect and fuck off.\n"
   printf "\n8=============D\n"
+}
+
+PromptForManualVicinaeExtensions () {
+  local acknowledgementOptions=(
+    "Yes, master, I'll do as you say, don't hit me T_T"
+  )
+  local selectedAcknowledgement=()
+
+  selectOptions acknowledgementOptions selectedAcknowledgement single true "Also, before I forget, I can't do everything for you. Go install the 'Wifi Commander' and 'Bluetooth' Vicinae extensions manually, bitch."
 }
 
 PromptForHyprlandRestart () {
@@ -794,10 +804,10 @@ PromptForHyprlandRestart () {
   )
   local selectedRestartOption=()
 
-  selectOptions restartOptions selectedRestartOption single true 'Restart Hyprland session now?'
+  selectOptions restartOptions selectedRestartOption single true 'Restart computer now?'
 
   if [[ ${selectedRestartOption[0]} == 'Waaaah, do everything for me, daddy, restart now, please!' ]]; then
-    logInfo 'Restarting Hyprland session now'
+    logInfo 'Restarting computer now'
     run reboot
     return
   fi

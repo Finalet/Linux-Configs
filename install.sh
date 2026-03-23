@@ -63,16 +63,9 @@ REQUIRED_PACMAN_PACKAGES=(
   # Other utilities
   fzf
   keyd
-  dbus
-  glib2
-  gsettings-desktop-schemas
   jq
-  libnotify
-  procps-ng
   qt6ct
-  socat
   wireplumber
-  wl-clipboard
   wtype
 )
 

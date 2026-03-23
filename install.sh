@@ -54,7 +54,6 @@ REQUIRED_PACMAN_PACKAGES=(
   polkit-gnome
   brightnessctl
   xdg-desktop-portal-hyprland
-  nmtui
   # Hyprpm dependencies
   cmake
   cpio

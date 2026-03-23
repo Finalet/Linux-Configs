@@ -53,8 +53,8 @@ REQUIRED_PACMAN_PACKAGES=(
   # System services
   polkit-gnome
   brightnessctl
-  networkmanager
   xdg-desktop-portal-hyprland
+  nmtui
   # Hyprpm dependencies
   cmake
   cpio
@@ -734,7 +734,6 @@ PromptForMonitorScale () {
 SetupServices () {
   logInfo 'Enabling required services'
 
-  run sudo systemctl enable --now NetworkManager
   run sudo systemctl enable --now keyd
 }
 
@@ -769,11 +768,6 @@ ValidateInstallation () {
 
   if [[ ! -f "$HOME/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so" ]]; then
     logError 'Waybar CFFI module artifact is missing at ~/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so'
-    exit 1
-  fi
-
-  if ! systemctl is-enabled NetworkManager >/dev/null 2>&1; then
-    logError 'NetworkManager service is not enabled.'
     exit 1
   fi
 

@@ -131,8 +131,8 @@ SYSTEM_SYMLINKS=(
 )
 
 start () {
-  StartingInstallation
   CheckEnvironment
+  StartingInstallation
   PromptConfigurationOptions
   ConfirmReadyToStart
   PrepareWorkspace
@@ -163,6 +163,8 @@ start () {
 StartingInstallation () {
   printf "\n\n--- (-.-) Oh, hi there, little buddy (-.-) ---\n"
   printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when it breaks. What a disappointment you are. Disgrace.\n"
+  printf "\nOkay, first things first, give me your sudo password, bitch (>_<)=O.\n\n"
+  run sudo -v
 }
 
 CheckEnvironment () {
@@ -192,9 +194,6 @@ CheckEnvironment () {
     logError 'This installer must be run from an active Hyprland session.'
     exit 1
   fi
-
-  printf "\nOkay, first things first, give me your sudo password, bitch (>_<)=O.\n\n"
-  run sudo -v
 }
 
 PromptConfigurationOptions () {

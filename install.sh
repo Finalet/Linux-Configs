@@ -160,7 +160,7 @@ start () {
 }
 
 StartingInstallation () {
-  printf "\n\n--- 🤨 Oh, hi there, little buddy 🤨 ---\n"
+  printf "\n\n--- (-.-) Oh, hi there, little buddy (-.-) ---\n"
   printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when it breaks. What a disappointment you are. Disgrace.\n"
 }
 
@@ -192,7 +192,7 @@ CheckEnvironment () {
     exit 1
   fi
 
-  printf "\nOkay, first things first, give me your sudo password, bitch 👊💢.\n\n"
+  printf "\nOkay, first things first, give me your sudo password, bitch (>_<)=O.\n\n"
   run sudo -v
 }
 
@@ -786,11 +786,11 @@ ValidateInstallation () {
 }
 
 InstallationCompleted () {
-  printf "\n\n--- 👼 Installation completed 👼 ---\n"
+  printf "\n\n--- Installation completed ---\n"
   printf "\nGo ahead, enjoy the fruits of my labor, you little stupid fucking bitch. Don't forget that you are nobody, you are worthless, you are incapable of an original thought. Amoeba. Your dad would not be proud.\n"
   printf "\nBackups are located in '$BACKUP_DIR', but not like you had anything worthy saving anyway.\n"
   printf "\nRestart your hyprland session to ensure all changes take effect and fuck off.\n"
-  printf "\n🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕🖕\n"
+  printf "\n8=============D\n"
 }
 
 PromptForHyprlandRestart () {

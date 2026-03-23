@@ -82,9 +82,11 @@ REQUIRED_AUR_PACKAGES=(
   # Fonts
   otf-apple-sf-pro
   ttf-apple-emoji
-  # System apps
+  # Nautilus extensions
   nautilus-dropbox
   nautilus-admin-gtk4
+  actions-for-nautilus-git
+  nautilus-open-any-terminal
   # Fluent theme dependencies
   gtk-engine-murrine
   # Other utilities
@@ -116,8 +118,6 @@ HYPRPM_ENABLED_PLUGINS=(
 )
 
 USER_SYMLINKS=(
-  "$REPO_DIR/ghostty:$HOME/.config/ghostty"
-  "$REPO_DIR/alacritty/alacritty.toml:$HOME/.config/alacritty/alacritty.toml"
   "$REPO_DIR/hypr:$HOME/.config/hypr"
   "$REPO_DIR/hyprhalt:$HOME/.config/hyprhalt"
   "$REPO_DIR/swaync:$HOME/.config/swaync"
@@ -126,6 +126,9 @@ USER_SYMLINKS=(
   "$REPO_DIR/waybar:$HOME/.config/waybar"
   "$REPO_DIR/zsh/.zshrc:$HOME/.zshrc"
   "$REPO_DIR/zsh/.p10k.zsh:$HOME/.p10k.zsh"
+  "$REPO_DIR/ghostty:$HOME/.config/ghostty"
+  "$REPO_DIR/alacritty/alacritty.toml:$HOME/.config/alacritty/alacritty.toml"
+  "$REPO_DIR/actions-for-nautilus/config.json:$HOME/.local/share/actions-for-nautilus/config.json"
 )
 
 SYSTEM_SYMLINKS=(
@@ -151,6 +154,7 @@ start () {
   SetupHyprlandPlugins
   SetupFluentGTKTheme
   SetupFluentIconTheme
+  ConfigureNautilusExtensions
   ConfigureWaybar
   SetupServices
   RefreshDesktopDatabase
@@ -581,6 +585,10 @@ SetupHyprlandPlugins () {
     logInfo "Enabling Hyprland plugin: $pluginName"
     run hyprpm enable "$pluginName"
   done
+}
+
+ConfigureNautilusExtensions () {
+  run gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal alacritty
 }
 
 ConfigureWaybar () {

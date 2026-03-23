@@ -1,0 +1,1 @@
+{"actions": [{"type": "command", "label": "Open in VS Code", "command_line": "code %f"}], "sort": "manual", "debug": false}

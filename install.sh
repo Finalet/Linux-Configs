@@ -52,6 +52,7 @@ REQUIRED_PACMAN_PACKAGES=(
   playerctl
   # System services
   polkit-gnome
+  gnome-keyring
   brightnessctl
   xdg-desktop-portal-hyprland
   # Hyprpm dependencies

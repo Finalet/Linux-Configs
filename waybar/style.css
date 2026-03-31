@@ -102,7 +102,7 @@ window#waybar {
 
 /* hypr-ws-apps */
 #hypr-ws-apps {
-  padding: 3px;
+  padding: 3px 2px 3px 2px;
   opacity: 0.5;
 }
 
@@ -114,7 +114,9 @@ window#waybar {
   transition: all 0.3s ease-out;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 9px;
-  min-width: 34px;
+  min-width: 20px;
+  margin: 0px 2px 0px 2px;
+  padding: 0px 6px;
 }
 
 #hypr-ws-apps-row.empty {

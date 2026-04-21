@@ -105,10 +105,12 @@ OPTIONAL_PACKAGES=()
 
 HYPRPM_PLUGIN_SOURCES=(
   https://github.com/hyprwm/hyprland-plugins
+  https://github.com/virtcode/hypr-dynamic-cursors
 )
 
 HYPRPM_ENABLED_PLUGINS=(
   hyprexpo
+  dynamic-cursors
 )
 
 USER_SYMLINKS=(

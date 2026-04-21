@@ -7,6 +7,7 @@ TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 TEMP_DIR=""
 MONITOR_SETUP_MODE=""
+INSTALL_GRUB_THEME=false
 
 REQUIRED_PACMAN_PACKAGES=(
   # Dev utilities
@@ -153,6 +154,7 @@ start () {
   SetupHyprlandPlugins
   SetupFluentGTKTheme
   SetupFluentIconTheme
+  [[ $INSTALL_GRUB_THEME == true ]] && InstallGrubTheme
   ConfigureNautilusExtensions
   ConfigureWaybar
   SetupServices
@@ -202,6 +204,7 @@ CheckEnvironment () {
 
 PromptConfigurationOptions () {
   PromptForMonitorSetupMode
+  PromptForGrubTheme
   PromptForOptionalPackages
 }
 
@@ -277,6 +280,18 @@ PromptForMonitorSetupMode () {
       exit 1
       ;;
   esac
+}
+
+PromptForGrubTheme () {
+  local grubThemeOptions=(
+    'Hell yeah, install the sick-ass GRUB theme'
+    'No, I want the boring default GRUB vibe'
+  )
+  local selectedGrubThemeOption=()
+
+  selectOptions grubThemeOptions selectedGrubThemeOption single true 'Do you want to install the included GRUB theme?'
+
+  [[ ${selectedGrubThemeOption[0]} == 'Hell yeah, install the sick-ass GRUB theme' ]] && INSTALL_GRUB_THEME=true
 }
 
 PrepareWorkspace () {
@@ -419,6 +434,34 @@ SetupFluentIconTheme () {
   }
 
   run ./install.sh
+
+  popd >/dev/null || true
+}
+
+InstallGrubTheme () {
+  local themeRepositoryDirectory="$TEMP_DIR/Particle-circle-grub-theme"
+  local screenSize
+
+  logInfo 'Installing Particle Circle GRUB theme'
+
+  screenSize=$(hyprctl monitors -j | jq -r '
+    [.[] | select((.disabled // false) | not)]
+    | max_by(.width * .height)
+    | if (.width >= 3840 or .height >= 2160) then "4k"
+      elif (.width >= 2560 or .height >= 1440) then "2k"
+      else "1080p"
+      end
+  ')
+
+  logInfo "Installing GRUB theme with $screenSize screen size."
+  run git clone --depth=1 https://github.com/yeyushengfan258/Particle-circle-grub-theme.git "$themeRepositoryDirectory"
+
+  pushd "$themeRepositoryDirectory" >/dev/null || {
+    logError 'Failed to enter Particle Circle GRUB theme directory.'
+    exit 1
+  }
+
+  run ./install.sh -s "$screenSize"
 
   popd >/dev/null || true
 }

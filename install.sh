@@ -126,6 +126,7 @@ USER_SYMLINKS=(
   "$REPO_DIR/alacritty/alacritty.toml:$HOME/.config/alacritty/alacritty.toml"
   "$REPO_DIR/actions-for-nautilus/config.json:$HOME/.local/share/actions-for-nautilus/config.json"
   "$REPO_DIR/qt6ct/qt6ct.conf:$HOME/.config/qt6ct/qt6ct.conf"
+  "$REPO_DIR/Templates:$HOME/Templates"
 )
 
 SYSTEM_SYMLINKS=(

@@ -143,6 +143,7 @@ start () {
   InstallAURPackages
   InstallOptionalPackages
   SetupZSH
+  SetupAlacrittyTheme
   SetupGPU
   SetupUserSymlinks
   SetupDesktopEntries
@@ -374,6 +375,14 @@ SetupZSH () {
 
   logInfo 'Setting zsh as the default shell'
   run chsh -s $(which zsh)
+}
+
+SetupAlacrittyTheme() {
+  local themeDirectory="$HOME/.config/alacritty/themes"
+
+  logInfo 'Installing Alacritty themes'
+  run mkdir -p "$themeDirectory"
+  run git clone --depth=1 https://github.com/alacritty/alacritty-theme "$themeDirectory"
 }
 
 SetupFluentGTKTheme () {

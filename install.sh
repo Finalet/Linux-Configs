@@ -461,7 +461,7 @@ InstallGrubTheme () {
     exit 1
   }
 
-  run ./install.sh -s "$screenSize"
+  run sudo ./install.sh -s "$screenSize"
 
   popd >/dev/null || true
 }

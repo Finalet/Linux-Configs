@@ -86,6 +86,25 @@
     "on-click": "vicinae vicinae://extensions/dagimg-dot/wifi-commander/scan-wifi",
     "on-click-right": "hyprctl dispatch exec [float] \"alacritty -e nmtui\""
   },
+  "battery": {
+    "interval": 60,
+    "format": "{icon}",
+    "format-icons": {
+      "default": ["", "", "", "", ""],
+      "charging": [""],
+    },
+    "tooltip-format": "{capacity}% | {timeTo}",
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "format-icons": {
+      "default": "",
+      "performance": "",
+      "balanced": "",
+      "power-saver": "",
+    },
+  },
   "clock#calendar": {
     "format": "{:%A, %B %d}  ",
     "on-click": "hyprctl dispatch exec [float] gnome-calendar",

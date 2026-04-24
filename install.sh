@@ -8,6 +8,7 @@ BACKUP_DIR="$BACKUP_ROOT/$TIMESTAMP"
 TEMP_DIR=""
 MONITOR_SETUP_MODE=""
 INSTALL_GRUB_THEME=false
+INSTALL_DEVICE_TYPE="desktop"
 
 REQUIRED_PACMAN_PACKAGES=(
   # Dev utilities
@@ -67,6 +68,10 @@ REQUIRED_PACMAN_PACKAGES=(
   qt6ct
   wireplumber
   wtype
+)
+
+LAPTOP_PACMAN_PACKAGES=(
+  power-profiles-daemon
 )
 
 REQUIRED_AUR_PACKAGES=(
@@ -203,6 +208,7 @@ CheckEnvironment () {
 }
 
 PromptConfigurationOptions () {
+  PromptForDeviceType
   PromptForMonitorSetupMode
   PromptForGrubTheme
   PromptForOptionalPackages
@@ -253,6 +259,18 @@ PromptForOptionalPackages () {
   done
 
   BuildUniquePackageList OPTIONAL_PACKAGES "${OPTIONAL_PACKAGES[@]}"
+}
+
+PromptForDeviceType () {
+  local deviceOptions=(
+    'Desktop'
+    'Laptop'
+  )
+  local selectedDeviceOption=()
+
+  selectOptions deviceOptions selectedDeviceOption single true 'Are you installing this on a laptopor a desktop?'
+
+  [[ ${selectedDeviceOption[0]} == 'Laptop' ]] && INSTALL_DEVICE_TYPE='laptop'
 }
 
 PromptForMonitorSetupMode () {
@@ -327,7 +345,11 @@ InstallYAY () {
 InstallPacmanPackages () {
   local packages=()
 
-  BuildUniquePackageList packages "${REQUIRED_PACMAN_PACKAGES[@]}"
+  if [[ $INSTALL_DEVICE_TYPE == 'laptop' ]]; then
+    BuildUniquePackageList packages "${REQUIRED_PACMAN_PACKAGES[@]}" "${LAPTOP_PACMAN_PACKAGES[@]}"
+  else
+    BuildUniquePackageList packages "${REQUIRED_PACMAN_PACKAGES[@]}"
+  fi
 
   logInfo 'Installing pacman packages required by this configuration'
   run sudo pacman -S --needed --noconfirm "${packages[@]}"
@@ -665,9 +687,23 @@ ConfigureWaybar () {
 
   tempConfigFile=$(mktemp)
 
-  JsoncToJson "$waybarConfigPath" | jq --argjson monitors "$monitorNamesJson" '
+  JsoncToJson "$waybarConfigPath" | jq --argjson monitors "$monitorNamesJson" --arg device "$INSTALL_DEVICE_TYPE" '
+    def with_power($modules):
+      ($modules - ["group/power"]) as $clean
+      | if $device != "laptop" then
+          $clean
+        else
+          (($clean | index("group/settings")) // -1) as $index
+          | if $index < 0 then
+              $clean
+            else
+              $clean[0:($index + 1)] + ["group/power"] + $clean[($index + 1):]
+            end
+        end;
+
     (.[0] // error("waybar/config.jsonc must contain at least one array element")) as $primary
     | ((.[1] // .[0])) as $secondary
+    | ($primary | ."modules-right" = with_power(.["modules-right"] // [])) as $primary
     | [($primary | .output = $monitors[0])] + [$monitors[1:][] | ($secondary | .output = .)]
   ' > "$tempConfigFile" || {
     rm -f "$tempConfigFile"

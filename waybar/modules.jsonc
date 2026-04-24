@@ -64,6 +64,10 @@
     "orientation": "inherit",
     "modules": ["pulseaudio", "custom/divider", "network"]
   },
+  "group/power": {
+    "orientation": "inherit",
+    "modules": ["battery", "custom/divider", "power-profiles-daemon"]
+  },
   "custom/divider": {
     "format": " "
   },

@@ -68,6 +68,7 @@ REQUIRED_PACMAN_PACKAGES=(
   qt6ct
   wireplumber
   wtype
+  socat
 )
 
 LAPTOP_PACMAN_PACKAGES=(

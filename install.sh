@@ -172,9 +172,9 @@ start () {
 }
 
 StartingInstallation () {
-  printf "\n\n--- (-.-) Oh, hi there, little buddy (-.-) ---\n"
-  printf "\nYou are a meme-big-boy looser, aren't ya? Don't got no arch hyprland config of your own, huh? Gotta snatch someone elses, huh? What a looser. What an animal. What a permanent underclass. If I were you I'd kill myself already. But hey, here you are, stealing my dot files. Good luck fixing anything when it breaks. What a disappointment you are. Disgrace.\n"
-  printf "\nOkay, first things first, give me your sudo password, bitch (>_<)=O.\n\n"
+  printf "\n\n--- Welcome to the Linux-Configs installer ---\n"
+  printf "\nHey there! Thanks for checking out these dotfiles. Let's get your system set up.\n"
+  printf "\nFirst things first, we need your sudo password to install packages and create system symlinks.\n\n"
   run sudo -v
 }
 
@@ -242,7 +242,7 @@ PromptForOptionalPackages () {
   local selectedOptions=()
   local customPackages=()
   local selectedOption
-  local selectionLabel='Select optional packages that you would like to install, you lazy dweeb.'
+  local selectionLabel='Select optional packages that you would like to install.'
 
   selectOptions optionalPackageOptions selectedOptions multiple false "$selectionLabel"
 
@@ -250,7 +250,7 @@ PromptForOptionalPackages () {
 
   for selectedOption in "${selectedOptions[@]}"; do
     if [[ $selectedOption == 'Provide custom packages [enter manually]' ]]; then
-      promptForPackageList 'Enter additional packages to install with yay [optional, space-separated, idiota]: ' customPackages
+      promptForPackageList 'Enter additional packages to install with yay [optional, space-separated]: ' customPackages
       BuildUniquePackageList OPTIONAL_PACKAGES "${OPTIONAL_PACKAGES[@]}" "${customPackages[@]}"
       continue
     fi
@@ -268,29 +268,29 @@ PromptForDeviceType () {
   )
   local selectedDeviceOption=()
 
-  selectOptions deviceOptions selectedDeviceOption single true 'Are you installing this on a laptopor a desktop?'
+  selectOptions deviceOptions selectedDeviceOption single true 'Are you installing this on a laptop or a desktop?'
 
   [[ ${selectedDeviceOption[0]} == 'Laptop' ]] && INSTALL_DEVICE_TYPE='laptop'
 }
 
 PromptForMonitorSetupMode () {
   local monitorOptions=(
-    "Keep monitor configuration from the repo, I'm stupid and scared to change anything."
-    "Auto-generate monitor configuration, I'm lazy and want to die."
-    "Provide custom configuration, I like to eat my own shit."
+    "Keep monitor configuration from the repo"
+    "Auto-generate monitor configuration"
+    "Provide custom configuration"
   )
   local selectedMonitorOption=()
 
-  selectOptions monitorOptions selectedMonitorOption single true 'How you would like mommy to configure your monitors, big boy?'
+  selectOptions monitorOptions selectedMonitorOption single true 'How would you like to configure your monitors?'
 
   case "${selectedMonitorOption[0]}" in
-    "Keep monitor configuration from the repo, I'm stupid and scared to change anything.")
+    "Keep monitor configuration from the repo")
       MONITOR_SETUP_MODE='keep'
       ;;
-    "Auto-generate monitor configuration, I'm lazy and want to die.")
+    "Auto-generate monitor configuration")
       MONITOR_SETUP_MODE='auto'
       ;;
-    "Provide custom configuration, I like to eat my own shit.")
+    "Provide custom configuration")
       MONITOR_SETUP_MODE='custom'
       ;;
     *)
@@ -302,14 +302,14 @@ PromptForMonitorSetupMode () {
 
 PromptForGrubTheme () {
   local grubThemeOptions=(
-    'Hell yeah, install the sick-ass GRUB theme'
-    'No, I want the boring default GRUB vibe'
+    'Yes, install the included GRUB theme'
+    'No, keep the default GRUB theme'
   )
   local selectedGrubThemeOption=()
 
   selectOptions grubThemeOptions selectedGrubThemeOption single true 'Do you want to install the included GRUB theme?'
 
-  [[ ${selectedGrubThemeOption[0]} == 'Hell yeah, install the sick-ass GRUB theme' ]] && INSTALL_GRUB_THEME=true
+  [[ ${selectedGrubThemeOption[0]} == 'Yes, install the included GRUB theme' ]] && INSTALL_GRUB_THEME=true
 }
 
 PrepareWorkspace () {
@@ -872,31 +872,30 @@ ValidateInstallation () {
 
 InstallationCompleted () {
   printf "\n\n--- Installation completed ---\n"
-  printf "\nGo ahead, enjoy the fruits of my labor, you little stupid fucking bitch. Don't forget that you are nobody, you are worthless, you are incapable of an original thought. Amoeba. Your dad would not be proud.\n"
-  printf "\nBackups are located in '$BACKUP_DIR', but not like you had anything worthy saving anyway.\n"
-  printf "\nRestart your computer to ensure all changes take effect and fuck off.\n"
-  printf "\n8=============D\n"
+  printf "\nEnjoy the setup! Everything has been configured and is ready to use.\n"
+  printf "\nBackups of any replaced files are located in '$BACKUP_DIR'.\n"
+  printf "\nRestart your computer to ensure all changes take effect.\n"
 }
 
 PromptForManualVicinaeExtensions () {
   local acknowledgementOptions=(
-    "Yes, master, I'll do as you say, don't hit me T_T"
+    "Got it, I'll do that."
   )
   local selectedAcknowledgement=()
 
-  selectOptions acknowledgementOptions selectedAcknowledgement single true "Also, before I forget, I can't do everything for you. Go install the 'Wifi Commander' and 'Bluetooth' Vicinae extensions manually, bitch."
+  selectOptions acknowledgementOptions selectedAcknowledgement single true "One more thing: the 'Wifi Commander' and 'Bluetooth' Vicinae extensions need to be installed manually — they can't be automated."
 }
 
 PromptForHyprlandRestart () {
   local restartOptions=(
-    "Waaaah, do everything for me, daddy, restart now, please!"
-    "Restart later, I like to play in mud."
+    "Restart now"
+    "Restart later"
   )
   local selectedRestartOption=()
 
   selectOptions restartOptions selectedRestartOption single true 'Restart computer now?'
 
-  if [[ ${selectedRestartOption[0]} == 'Waaaah, do everything for me, daddy, restart now, please!' ]]; then
+  if [[ ${selectedRestartOption[0]} == 'Restart now' ]]; then
     logInfo 'Restarting computer now'
     run reboot
     return

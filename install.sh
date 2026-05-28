@@ -110,7 +110,7 @@ OPTIONAL_PACKAGE_SUGGESTIONS=(
 OPTIONAL_PACKAGES=()
 
 HYPRPM_PLUGIN_SOURCES=(
-  https://github.com/hyprwm/hyprland-plugins
+  https://github.com/sandwichfarm/hyprexpo
   https://github.com/virtcode/hypr-dynamic-cursors
 )
 

@@ -2,7 +2,7 @@
   "tray": {
     "icon-size": 16,
     "spacing": 8,
-    "show-passive-items": true
+    "show-passive-items": true,
   },
   "hyprland/window": {
     "format": "{initialTitle}",
@@ -10,20 +10,20 @@
     "icon": true,
     "icon-size": 16,
     "rewrite": {
-      "": "Nothing"
-    }
+      "": "Nothing",
+    },
   },
   "hyprland/workspaces": {
     "format": "{windows}",
     "persistent-workspaces": {
       "HDMI-A-1": [1, 2, 3, 4],
-      "DP-1": [5, 6, 7, 8]
+      "DP-1": [5, 6, 7, 8],
     },
     "workspace-taskbar": {
       "enable": true,
       "format": "{icon}",
-      "icon-size": 16
-    }
+      "icon-size": 16,
+    },
   },
   "cffi/hypr-ws-apps#minimizedWindow": {
     "module_path": "/home/grant/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so",
@@ -33,7 +33,7 @@
     "max_icons": 12, // 0 = unlimited
     "show_empty": true, // hide widget when no apps
     "tooltip": true, // show tooltip listing apps
-    "css_class": "minimizedWindow"
+    "css_class": "minimizedWindow",
   },
   "cffi/hypr-ws-apps#scratchpad": {
     "module_path": "/home/grant/.config/waybar/hypr-ws-apps/libhypr_ws_apps.so",
@@ -43,7 +43,7 @@
     "max_icons": 12, // 0 = unlimited
     "show_empty": true, // hide widget when no apps
     "tooltip": true, // show tooltip listing apps
-    "css_class": "scratchpad"
+    "css_class": "scratchpad",
   },
   "mpris": {
     "format": "{status_icon}  {artist} - {title}",
@@ -51,35 +51,35 @@
     "title-len": 30,
     "status-icons": {
       "playing": "",
-      "paused": ""
-    }
+      "paused": "",
+    },
   },
   "hyprland/language": {
     "format": "{}  ",
     "format-en": "EN",
     "format-ru": "RU",
-    "on-click": "hyprctl switchxkblayout current next"
+    "on-click": "hyprctl switchxkblayout current next",
   },
   "group/settings": {
     "orientation": "inherit",
-    "modules": ["pulseaudio", "custom/divider", "network"]
+    "modules": ["pulseaudio", "custom/divider", "network"],
   },
   "group/power": {
     "orientation": "inherit",
-    "modules": ["battery", "custom/divider", "power-profiles-daemon"]
+    "modules": ["battery", "custom/divider", "power-profiles-daemon"],
   },
   "custom/divider": {
-    "format": " "
+    "format": " ",
   },
   "pulseaudio": {
     "format": "{icon}",
     "format-bluetooth": "{volume}% {icon}",
     "format-muted": "",
     "format-icons": {
-      "default": ["", "", ""]
+      "default": ["", "", ""],
     },
     "scroll-step": 1,
-    "on-click": "hyprctl dispatch exec \"[float; size 800x600] pavucontrol\""
+    "on-click": "hyprctl dispatch exec \"[float; size 800 600] pavucontrol\"",
   },
   "network": {
     "interface": "wlan0",
@@ -87,8 +87,8 @@
     "format-wifi": "",
     "format-disconnected": "󰖪",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
-    "on-click": "vicinae vicinae://extensions/dagimg-dot/wifi-commander/scan-wifi",
-    "on-click-right": "hyprctl dispatch exec [float] \"alacritty -e nmtui\""
+    "on-click": "vicinae vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi",
+    "on-click-right": "hyprctl dispatch exec [float] \"alacritty -e nmtui\"",
   },
   "battery": {
     "interval": 60,
@@ -112,11 +112,11 @@
   "clock#calendar": {
     "format": "{:%A, %B %d}  ",
     "on-click": "hyprctl dispatch exec [float] gnome-calendar",
-    "tooltip": false
+    "tooltip": false,
   },
   "clock#time": {
     "format": "{:%H:%M}  ",
-    "tooltip": false
+    "tooltip": false,
   },
   "custom/notification": {
     "tooltip": true,
@@ -129,13 +129,13 @@
       "inhibited-notification": "󰂛",
       "inhibited-none": "󰪑",
       "dnd-inhibited-notification": "󰂛",
-      "dnd-inhibited-none": "󰪑"
+      "dnd-inhibited-none": "󰪑",
     },
     "return-type": "json",
     "exec-if": "which swaync-client",
     "exec": "swaync-client -swb",
     "on-click": "swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
-    "escape": true
-  }
+    "escape": true,
+  },
 }

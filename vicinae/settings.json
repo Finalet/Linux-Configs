@@ -11,6 +11,11 @@
 {
    "$schema": "https://vicinae.com/schemas/config.json",
    "pop_to_root_on_close": true,
+   "theme": {
+      "dark": {
+         "name": "zenwritten-dark"
+      }
+   },
    "launcher_window": {
       "opacity": 0.85,
       "layer_shell": {

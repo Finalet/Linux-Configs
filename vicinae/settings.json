@@ -55,6 +55,12 @@
       "browser-extension": {
          "enabled": false
       },
+      "calculator": {
+         "preferences": {
+            "backend": "soulver-core",
+            "refreshRatesOnStartup": true
+         }
+      },
       "clipboard": {
          "entrypoints": {
             "history": {
@@ -66,6 +72,34 @@
       },
       "power": {
          "enabled": false
+      },
+      "system": {
+         "entrypoints": {
+            "toggle-mute": {
+               "enabled": false
+            },
+            "volume-0": {
+               "enabled": false
+            },
+            "volume-100": {
+               "enabled": false
+            },
+            "volume-25": {
+               "enabled": false
+            },
+            "volume-50": {
+               "enabled": false
+            },
+            "volume-75": {
+               "enabled": false
+            },
+            "volume-down": {
+               "enabled": false
+            },
+            "volume-up": {
+               "enabled": false
+            }
+         }
       }
    }
 }

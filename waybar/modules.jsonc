@@ -82,13 +82,14 @@
     "on-click": "hyprctl dispatch exec \"[float; size 800 600] pavucontrol\"",
   },
   "network": {
-    "interface": "wlan0",
     "format": "{ifname}",
     "format-wifi": "",
+    "format-ethernet": "󰈀",
     "format-disconnected": "󰖪",
     "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
     "on-click": "vicinae vicinae://launch/@dagimg-dot/store.vicinae.wifi-commander/scan-wifi",
     "on-click-right": "hyprctl dispatch exec [float] \"alacritty -e nmtui\"",
+    "interval": 60,
   },
   "battery": {
     "interval": 60,

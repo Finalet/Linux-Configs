@@ -32,6 +32,7 @@ REQUIRED_PACMAN_PACKAGES=(
   firefox
   gnome-calendar
   gnome-disk-utility
+  seahorse
   celluloid
   loupe
   resources

@@ -317,6 +317,8 @@ struct ModuleState {
   GtkWidget* box = nullptr;
   GtkWidget* wrapper = nullptr;
   GtkWidget* icons = nullptr;
+  wbcffi_module* module = nullptr;
+  void (*queue_update)(wbcffi_module*) = nullptr;
 
   std::string workspace = "1";
   int icon_size = 18;
@@ -327,8 +329,10 @@ struct ModuleState {
   std::string css_class;
   std::string active_workspace;         // from workspace>> (normal workspaces)
   std::string active_special_workspace; // from activespecial>> (special workspaces)
+  std::mutex workspace_mu;
 
   std::atomic<bool> stop{false};
+  std::atomic<int> socket_fd{-1};
   GThread* thread = nullptr;
 
   IconResolver resolver;
@@ -372,11 +376,15 @@ static void render_icons(ModuleState* st) {
   gtk_style_context_remove_class(row_ctx, "nonempty");
   gtk_style_context_add_class(row_ctx, is_empty ? "empty" : "nonempty");
 
-  const bool is_special_target = starts_with(st->workspace, "special:");
-  const bool is_active =
-    is_special_target
-      ? (!st->active_special_workspace.empty() && st->active_special_workspace == st->workspace)
-      : (!st->active_workspace.empty() && st->active_workspace == st->workspace);
+  bool is_active;
+  {
+    std::lock_guard<std::mutex> lk(st->workspace_mu);
+    const bool is_special_target = starts_with(st->workspace, "special:");
+    is_active =
+      is_special_target
+        ? (!st->active_special_workspace.empty() && st->active_special_workspace == st->workspace)
+        : (!st->active_workspace.empty() && st->active_workspace == st->workspace);
+  }
 
   auto apply_active_classes = [&](GtkWidget* w) {
     GtkStyleContext* ctx = gtk_widget_get_style_context(w);
@@ -442,20 +450,15 @@ static void render_icons(ModuleState* st) {
   }
 }
 
-// invoked on GTK main loop
-static gboolean invoke_update_cb(gpointer data) {
-  auto* st = (ModuleState*)data;
-  st->update_pending.store(false);
-  render_icons(st);
-  return G_SOURCE_REMOVE;
-}
-
 static void request_update(ModuleState* st) {
+  if (st->stop.load()) return;
   bool expected = false;
   if (!st->update_pending.compare_exchange_strong(expected, true)) return; // already queued
-  g_main_context_invoke(nullptr, [](gpointer data) -> gboolean {
-    return invoke_update_cb(data);
-  }, st);
+  if (st->stop.load()) {
+    st->update_pending.store(false);
+    return;
+  }
+  st->queue_update(st->module);
 }
 
 static std::string first_field(std::string s) {
@@ -484,6 +487,13 @@ static gpointer hypr_thread_fn(gpointer data) {
 
   int fd = socket(AF_UNIX, SOCK_STREAM, 0);
   if (fd < 0) return nullptr;
+  st->socket_fd.store(fd);
+
+  if (st->stop.load()) {
+    close(fd);
+    st->socket_fd.store(-1);
+    return nullptr;
+  }
 
   sockaddr_un addr{};
   addr.sun_family = AF_UNIX;
@@ -491,6 +501,7 @@ static gpointer hypr_thread_fn(gpointer data) {
 
   if (connect(fd, (sockaddr*)&addr, sizeof(addr)) != 0) {
     close(fd);
+    st->socket_fd.store(-1);
     return nullptr;
   }
 
@@ -513,15 +524,21 @@ static gpointer hypr_thread_fn(gpointer data) {
       pos = nl + 1;
 
       if (starts_with(line, "workspace>>")) {
-        st->active_workspace = first_field(line.substr(strlen("workspace>>")));
+        {
+          std::lock_guard<std::mutex> lk(st->workspace_mu);
+          st->active_workspace = first_field(line.substr(strlen("workspace>>")));
+        }
         request_update(st);
         continue;
       }
 
       if (starts_with(line, "activespecial>>")) {
-        st->active_special_workspace = normalize_special_name(
-          line.substr(strlen("activespecial>>"))
-        );
+        {
+          std::lock_guard<std::mutex> lk(st->workspace_mu);
+          st->active_special_workspace = normalize_special_name(
+            line.substr(strlen("activespecial>>"))
+          );
+        }
         request_update(st);
         continue;
       }
@@ -537,6 +554,7 @@ static gpointer hypr_thread_fn(gpointer data) {
   }
 
   close(fd);
+  st->socket_fd.store(-1);
   return nullptr;
 }
 
@@ -552,9 +570,11 @@ extern "C" void* wbcffi_init(const wbcffi_init_info* init_info,
             config_entries[i].value ? config_entries[i].value : "(null)");
   }
 
-  if (!init_info || !init_info->get_root_widget || !init_info->obj) return nullptr;
+  if (!init_info || !init_info->get_root_widget || !init_info->queue_update || !init_info->obj) return nullptr;
 
   auto* st = new ModuleState();
+  st->module = init_info->obj;
+  st->queue_update = init_info->queue_update;
 
   st->root = init_info->get_root_widget(init_info->obj);
   if (!st->root) { delete st; return nullptr; }
@@ -643,6 +663,8 @@ extern "C" void wbcffi_deinit(void* instance) {
   if (!st) return;
 
   st->stop.store(true);
+  int fd = st->socket_fd.load();
+  if (fd >= 0) shutdown(fd, SHUT_RDWR);
   if (st->thread) {
     g_thread_join(st->thread);
     st->thread = nullptr;
@@ -660,6 +682,8 @@ extern "C" void wbcffi_deinit(void* instance) {
 extern "C" void wbcffi_update(void* instance) {
   auto* st = (ModuleState*)instance;
   if (!st) return;
+  st->update_pending.store(false);
+  if (st->stop.load()) return;
   render_icons(st);
 }
 extern "C" void wbcffi_refresh(void*, int) {}

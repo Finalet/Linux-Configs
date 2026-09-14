@@ -386,6 +386,7 @@ InstallAppleFonts () {
 
   run git clone https://aur.archlinux.org/apple-fonts.git "$dir"
   pushd "$dir" >/dev/null || exit 1
+
   run curl -Lo PKGBUILD https://pastebin.com/raw/0ZyitqVG
   run sed -i 's/\r$//' PKGBUILD
   run makepkg -si --skipinteg --noconfirm

@@ -80,7 +80,7 @@ REQUIRED_AUR_PACKAGES=(
   # Cursor
   rose-pine-hyprcursor
   # Fonts
-  otf-apple-sf-pro
+  # otf-apple-sf-pro // This package is broken at the moment, installing fonts manually with InstallAppleFonts function
   ttf-apple-emoji
   # Nautilus extensions
   nautilus-dropbox
@@ -150,6 +150,7 @@ start () {
   InstallPacmanPackages
   InstallAURPackages
   InstallOptionalPackages
+  InstallAppleFonts
   SetupZSH
   SetupAlacrittyTheme
   SetupGPU
@@ -376,6 +377,20 @@ InstallOptionalPackages () {
 
   logInfo 'Installing optional packages selected for this machine'
   run yay -S --needed --noconfirm "${packages[@]}"
+}
+
+InstallAppleFonts () {
+  local dir="$TEMP_DIR/apple-fonts"
+
+  logInfo 'Installing Apple fonts'
+
+  run git clone https://aur.archlinux.org/apple-fonts.git "$dir"
+  pushd "$dir" >/dev/null || exit 1
+  run curl -Lo PKGBUILD https://pastebin.com/raw/0ZyitqVG
+  run sed -i 's/\r$//' PKGBUILD
+  run makepkg -si --skipinteg --noconfirm
+
+  popd >/dev/null || true
 }
 
 SetupZSH () {

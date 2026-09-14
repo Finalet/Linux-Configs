@@ -27,7 +27,7 @@ REQUIRED_PACMAN_PACKAGES=(
   ttf-nerd-fonts-symbols
   ttf-roboto
   otf-font-awesome
-  noto-fonts-cjk
+  noto-fonts
   # System apps
   firefox
   gnome-calendar

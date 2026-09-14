@@ -106,6 +106,7 @@ OPTIONAL_PACKAGE_SUGGESTIONS=(
   teamspeak3
   vesktop
   chatgpt-desktop
+  opencode
 )
 
 OPTIONAL_PACKAGES=()

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-STYLE_FILE=${STYLE_FILE:-"$HOME/.config/hypr/configs/styles.conf"}
+STYLE_FILE=${STYLE_FILE:-"$HOME/.config/hypr/configs/styles.lua"}
 
 apply_style() {
   # args arrive as key value pairs
@@ -19,7 +19,7 @@ apply_style() {
     key=$1
     value=$2
     shift 2
-    sed_script="${sed_script}s/^([[:space:]]*${key}[[:space:]]*=[[:space:]]*).*/\\1${value}/;"
+    sed_script="${sed_script}s/^([[:space:]]*${key}[[:space:]]*=[[:space:]]*).*/\\1${value},/;"
   done
 
   # shellcheck disable=SC2001 # sed_script is intentionally constructed for sed -E
@@ -44,8 +44,8 @@ SetStyleDefault() {
     gaps_out 0 \
     rounding 10 \
     rounding_power 2 \
-    active_opacity 0.9 \
-    inactive_opacity 0.9
+    active_opacity 0.95 \
+    inactive_opacity 0.95
 }
 
 SetStyleBubbly() {
@@ -55,8 +55,8 @@ SetStyleBubbly() {
     gaps_out 2 \
     rounding 18 \
     rounding_power 3 \
-    active_opacity 0.9 \
-    inactive_opacity 0.9
+    active_opacity 0.95 \
+    inactive_opacity 0.95
 }
 
 selectedStyle=$(

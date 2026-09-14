@@ -4,7 +4,7 @@ This repo contains my Arch Linux dotfiles for a Hyprland-based Wayland desktop.
 
 ## What’s in this repo
 
-- `hypr/` — Hyprland config (`hyprland.conf` + `configs/` includes) and helper scripts
+- `hypr/` — Hyprland Lua config (`hyprland.lua` + `configs/` modules) and helper scripts; Hypridle, Hyprlock, and Hyprpaper keep their own `.conf` files
 - `waybar/` — Waybar config + styling, plus a custom CFFI module (`hypr-ws-apps/`)
 - `swaync/` — Sway Notification Center config + styling
 - `ghostty/` — Ghostty terminal config
@@ -296,7 +296,7 @@ This is typically provided by KDE/Plasma packages (you have `plasma-meta` instal
 
 ### 4) Hyprland plugins (hyprexpo)
 
-These configs reference the `hyprexpo` plugin (see `hypr/configs/plugins.conf`) and start `hyprpm reload` on login.
+These configs reference the `hyprexpo` plugin (see `hypr/configs/plugins.lua`) and start `hyprpm reload` on login.
 If the expo bind doesn’t work, install/enable the plugin via `hyprpm` (exact steps depend on your Hyprland version).
 
 ## Launching Hyprland
@@ -306,6 +306,6 @@ How you start Hyprland is up to you (display manager, greetd, or tty). For a sim
 ## Troubleshooting checklist
 
 - `waybar` doesn’t show workspace icons: confirm the CFFI module is built and `module_path` is correct.
-- Notifications don’t work: `swaync` should be running (it’s started in `hypr/configs/autostart.conf`).
+- Notifications don’t work: `swaync` should be running (it’s started in `hypr/configs/autostart.lua`).
 - Screenshot / picker binds do nothing: ensure `hyprshot` and `hyprpicker` are installed.
 - Wallpaper colors not updating: ensure `hellwal` and `jq` exist and `wallpaper.png` is present.

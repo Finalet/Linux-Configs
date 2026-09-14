@@ -10,7 +10,7 @@ hl.config({
     general = {
         gaps_in = 0,
         gaps_out = 0,
-        border_size = 2,
+        border_size = 0,
         col = {
             active_border = {
                 colors = { "rgba(255,255,255,0.4)", "rgba(255,255,255,0.2)" },
@@ -25,10 +25,10 @@ hl.config({
 
     -- https://wiki.hypr.land/Configuring/Variables/#decoration
     decoration = {
-        rounding = 10,
+        rounding = 0,
         rounding_power = 2,
-        active_opacity = 0.95,
-        inactive_opacity = 0.95,
+        active_opacity = 1,
+        inactive_opacity = 1,
         shadow = {
             enabled = true,
             range = 36,

@@ -19,19 +19,19 @@ MOD_MASK_SUPER=64
 MOD_MASK_ALT=8
 
 bind_super() {
-  hyprctl keyword unbind alt,mouse:272 >/dev/null
-  hyprctl keyword unbind alt,mouse:273 >/dev/null
+  hyprctl eval 'hl.unbind("ALT + mouse:272")' >/dev/null
+  hyprctl eval 'hl.unbind("ALT + mouse:273")' >/dev/null
 
-  hyprctl keyword bindm super,mouse:272,movewindow >/dev/null
-  hyprctl keyword bindm super,mouse:273,resizewindow >/dev/null
+  hyprctl eval 'hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })' >/dev/null
+  hyprctl eval 'hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })' >/dev/null
 }
 
 bind_alt() {
-  hyprctl keyword unbind super,mouse:272 >/dev/null
-  hyprctl keyword unbind super,mouse:273 >/dev/null
+  hyprctl eval 'hl.unbind("SUPER + mouse:272")' >/dev/null
+  hyprctl eval 'hl.unbind("SUPER + mouse:273")' >/dev/null
 
-  hyprctl keyword bindm alt,mouse:272,movewindow >/dev/null
-  hyprctl keyword bindm alt,mouse:273,resizewindow >/dev/null
+  hyprctl eval 'hl.bind("ALT + mouse:272", hl.dsp.window.drag(), { mouse = true })' >/dev/null
+  hyprctl eval 'hl.bind("ALT + mouse:273", hl.dsp.window.resize(), { mouse = true })' >/dev/null
 }
 
 get_keybind_modmask() {

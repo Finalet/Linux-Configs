@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if yad --question \
+if yad \
   --title="Shutdown" \
   --text="Are you sure you want to shut down this computer?" \
   --image="system-shutdown" \

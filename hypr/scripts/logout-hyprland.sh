@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if yad --question \
+if yad \
   --title="Logout" \
   --text="Are you sure you want to log out of this session?" \
   --image="system-log-out" \

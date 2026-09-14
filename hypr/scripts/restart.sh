@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if yad --question \
+if yad \
   --title="Restart" \
   --text="Are you sure you want to restart this computer?" \
   --image="system-restart" \

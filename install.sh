@@ -107,6 +107,7 @@ OPTIONAL_PACKAGE_SUGGESTIONS=(
   obs-studio
   teamspeak3
   vesktop
+  chatgpt-desktop
 )
 
 OPTIONAL_PACKAGES=()

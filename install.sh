@@ -138,6 +138,7 @@ USER_SYMLINKS=(
 
 SYSTEM_SYMLINKS=(
   "$REPO_DIR/keyd:/etc/keyd"
+  "$REPO_DIR/fontconfig/local.conf:/etc/fonts/local.conf"
 )
 
 start () {

@@ -43,12 +43,13 @@ REQUIRED_PACMAN_PACKAGES=(
   swaync
   swayosd
   # Hyprland utilities
-  hypridle
   hyprland
+  hypridle
   hyprlock
   hyprpaper
   hyprpicker
   hyprshot
+  hyprpm
   # Audio
   pavucontrol
   pipewire-pulse
@@ -58,9 +59,6 @@ REQUIRED_PACMAN_PACKAGES=(
   gnome-keyring
   brightnessctl
   xdg-desktop-portal-hyprland
-  # Hyprpm dependencies
-  cmake
-  cpio
   # Fluent theme dependencies
   gnome-themes-extra
   sassc

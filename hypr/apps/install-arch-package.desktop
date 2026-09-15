@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Install Arch Package
+Exec=alacritty -e /home/grant/.config/hypr/scripts/install-arch-package.sh
+Icon=system-software-install
+Terminal=false
+Categories=Settings;PackageManager;

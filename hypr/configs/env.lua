@@ -22,6 +22,3 @@ hl.env("SDL_VIDEODRIVER", "wayland")
 
 -- Running GTK apps with cairo (CPU) renderer, because otherwise the context menus are lagging.
 hl.env("GSK_RENDERER", "cairo")
-
--- Forcing to only use the dedicated GPU
-hl.env("AQ_DRM_DEVICES", "/dev/dri/nvidia-gpu")

@@ -7,5 +7,5 @@ if yad \
   --borders=20 \
   --window-type=dialog \
   --fixed; then
-  hyprhalt --text "Logging out" --post-cmd 'hyprctl dispatch exit'
+  hyprhalt --text "Logging out" --post-cmd 'hyprctl dispatch "hl.dsp.exit()"'
 fi

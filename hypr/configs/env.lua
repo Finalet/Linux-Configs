@@ -1,6 +1,6 @@
 -- https://wiki.hypr.land/0.56.0/Configuring/Advanced-and-Cool/Environment-variables/
 
-hl.env("XCURSOR_SIZE", "24")
+hl.env("XCURSOR_SIZE", "28")
 hl.env("HYPRCURSOR_SIZE", "28")
 hl.env("HYPRCURSOR_THEME", "rose-pine-hyprcursor")
 

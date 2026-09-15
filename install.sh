@@ -82,6 +82,7 @@ REQUIRED_AUR_PACKAGES=(
   # Fonts
   # otf-apple-sf-pro // This package is broken at the moment, installing fonts manually with InstallAppleFonts function
   ttf-apple-emoji
+  win11fonts-auto
   # Nautilus extensions
   nautilus-dropbox
   nautilus-admin-gtk4

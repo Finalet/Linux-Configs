@@ -18,3 +18,9 @@ selected_packages=$(yay -Sl |
 
 set -- $selected_packages
 yay -S "$@"
+status=$?
+
+printf '\nDone. Press Enter to close...'
+read -r _
+
+exit "$status"

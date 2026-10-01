@@ -23,6 +23,11 @@
       }
    },
    "providers": {
+      "@dagimg-dot/store.vicinae.wifi-commander": {
+         "preferences": {
+            "network-cli-tool": "nmcli"
+         }
+      },
       "applications": {
          "preferences": {
             "defaultAction": "launch",

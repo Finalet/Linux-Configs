@@ -23,6 +23,8 @@
       "enable": true,
       "format": "{icon}",
       "icon-size": 16,
+      // Below is a hack to open workspace when clicking on an app icon. Without it, clickin on the icon will do nothing. Hopefully, this should not be necessary in the final release of waybar beyond 0.15, but I built from master branch and that is what i get.
+      "on-click-window": "hyprctl dispatch \"hl.dsp.focus({ workspace = '$(hyprctl -j clients | jq -r '.[] | select(.address == \"{address}\") | .workspace.id')' })\"",
     },
   },
   "cffi/hypr-ws-apps#minimizedWindow": {

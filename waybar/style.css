@@ -29,7 +29,9 @@ window#waybar {
 #hypr-ws-apps,
 #mpris,
 #workspaces {
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.5), inset 0px 1px 2px -1px rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0px 1px 4px rgba(0, 0, 0, 0.5),
+    inset 0px 1px 2px -1px rgba(255, 255, 255, 0.75);
   margin: 6px 4px 6px 4px;
   border-radius: 12px;
   padding-left: 12px;
@@ -53,6 +55,13 @@ window#waybar {
   transition: all 0.3s ease-out;
   color: transparent;
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hack to remove background and padding from app icons. Hopefully, this should not be necessary in the final release of waybar beyond 0.15, but I built from master branch and that is what i get.*/
+#workspaces button.taskbar-window {
+  background: transparent;
+  padding: 0;
+  min-width: 0;
 }
 
 #workspaces .taskbar-window {

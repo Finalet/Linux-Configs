@@ -120,3 +120,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+typeset -U path
+path+=("$HOME/.local/bin")

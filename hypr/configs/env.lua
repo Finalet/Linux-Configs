@@ -20,5 +20,8 @@ hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("CLUTTER_BACKEND", "wayland")
 hl.env("SDL_VIDEODRIVER", "wayland")
 
+-- Restore compositor blur for GTK 4.24 apps by disabling their background-effect protocol.
+hl.env("GDK_WAYLAND_DISABLE", "ext_background_effect_manager_v1")
+
 -- Running GTK apps with cairo (CPU) renderer, because otherwise the context menus are lagging.
 hl.env("GSK_RENDERER", "cairo")

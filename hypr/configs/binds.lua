@@ -3,6 +3,7 @@
 hl.config({
     binds = {
         allow_workspace_cycles = true,
+        scroll_event_delay = 0,
     },
 })
 
@@ -127,3 +128,13 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("swayosd-client --playerctl play-pause"
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("swayosd-client --playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("swayosd-client --playerctl next"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("swayosd-client --playerctl previous"), { locked = true })
+
+-- Razer Blackwidow V4 Pro Macro Keys
+hl.bind("F13", hl.dsp.exec_cmd('echo start > "$XDG_RUNTIME_DIR/hyprwhspr/recording_control"'), { description = "Speech-to-text" })
+hl.bind("F13", hl.dsp.exec_cmd('echo release > "$XDG_RUNTIME_DIR/hyprwhspr/recording_control"'), { release = true })
+hl.bind("F17", hl.dsp.global("com.t3tools.T3Code:capture-window"))
+hl.bind("F18", hl.dsp.focus({ workspace = "r+1" }))
+hl.bind("F20", hl.dsp.focus({ workspace = "r-1" }))
+hl.bind("F24", hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"), { locked = true })
+hl.bind("mouse_right", hl.dsp.exec_cmd("swayosd-client --input-volume raise"))
+hl.bind("mouse_left", hl.dsp.exec_cmd("swayosd-client --input-volume lower"))
